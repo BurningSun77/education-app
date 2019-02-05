@@ -11,7 +11,7 @@ import com.wolfram.alpha.WASubpod;
 public class AlphaAPISample {
 
     // PUT YOUR APPID HERE:
-    private static String appid = "XXXX";
+    private static String appid = "R3U29Q-EVL4795U7X";
 
 
     public static void main(String[] args) {

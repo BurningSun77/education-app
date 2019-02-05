@@ -56,27 +56,24 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
                 // sb.append(userinput);
                 // String finalinput = sb.toString();
 
-                EditText mEdit = (EditText) findViewById(R.id.inputquery);
-                String finalinput = mEdit.getText().toString();
+                EditText mEdit = findViewById(R.id.inputquery);
+                String finalinput = null;
+                try {
 
+                    finalinput = baseURL + URLEncoder.encode(field.getText().toString(), "UTF-8") + appID;
+                    mEdit.setText(finalinput);
+                    finalinput = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(mEdit.getText().toString(), "UTF-8") + "&size=250x250";
+                } catch (UnsupportedEncodingException e) {
+
+                    e.printStackTrace();
+                }
 
                 if (finalinput != null) {
 
                     // Picasso.get().load(generateURL(finalinput)).fit().centerInside().into(sampleimage);
                     // Image image = ImageApi.call("what flights are overhead?", new DefaultImageParameters().setAppId("DEMO"));
 
-                    String URL = null;
-                    try {
-
-                        URL = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(finalinput, "UTF-8") + "&size=250x250";
-                    } catch (UnsupportedEncodingException e) {
-
-                        e.printStackTrace();
-                    }
-                    if (URL != null) {
-
-                        Picasso.get().load(URL).into(sampleimage);
-                    }
+                    Picasso.get().load(finalinput).into(sampleimage);
                 }
             }
         });
