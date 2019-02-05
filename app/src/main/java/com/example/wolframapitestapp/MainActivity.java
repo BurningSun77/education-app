@@ -96,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
 
         WolframQuerier cc = new WolframQuerier(this);
         cc.execute(query);
+        // cc.getWAObject(query);
     }
 
     @Override
