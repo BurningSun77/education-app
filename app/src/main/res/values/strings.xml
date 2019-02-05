@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Wolframapitestapp</string>
+    <string name="search_api">Search API</string>
+    <string name="result">resultapi</string>
+</resources>
