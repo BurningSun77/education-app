@@ -18,9 +18,9 @@ import com.wolfram.alpha.WASubpod;
 
 public class WolframQuerier extends AsyncTask<String, Void, String> {
 
-    String baseURL;
-    String appID;
-    WolframAPIFetch callback;
+    private String baseURL;
+    private String appID;
+    private WolframAPIFetch callback;
 
     public WolframQuerier(Context c) {
 

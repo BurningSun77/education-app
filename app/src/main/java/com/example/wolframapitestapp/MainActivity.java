@@ -2,24 +2,16 @@ package com.example.wolframapitestapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
-import com.wolfram.alpha.WAEngine;
-import com.wolfram.alpha.WAQuery;
-import com.wolfram.alpha.WAImage;
-import com.wolfram.alpha.impl.WAImageImpl;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -27,13 +19,14 @@ import java.net.URLEncoder;
 
 public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
 
-    private TextView field;
-    private ProgressBar bar;
-    private TextView text;
-    private ImageView sampleimage;
+    private TextView question;
+    private TextView answer;
+    private TextView url;
+    private ProgressBar progressCircle;
+    private ImageView qrCode;
 
-    private String baseURL = "http://api.wolframalpha.com/v2/query?input=";
-    private String appID = "&appid=R3U29Q-EVL4795U7X";
+    private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
+    private final String appID = "&appid=R3U29Q-EVL4795U7X";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,65 +37,51 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
         Intent intent = getIntent();
         Uri data = intent.getData();
 
-        field = findViewById(R.id.field);
-        bar = findViewById(R.id.progressBar);
-        text = findViewById(R.id.textView);
-        sampleimage = findViewById(R.id.imageView);
-
-        // final TextView userinput = (TextView) findViewById(R.id.inputquery);
-        // userinput.setText(R.string.app_name);
-
-        final Button button = findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-
-                // final StringBuilder sb = new StringBuilder(userinput.length());
-                // sb.append(userinput);
-                // String finalinput = sb.toString();
-
-                EditText mEdit = findViewById(R.id.inputquery);
-                String finalinput = null;
-                try {
-
-                    finalinput = baseURL + URLEncoder.encode(field.getText().toString(), "UTF-8") + appID;
-                    mEdit.setText(finalinput);
-                    finalinput = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(mEdit.getText().toString(), "UTF-8") + "&size=250x250";
-                } catch (UnsupportedEncodingException e) {
-
-                    e.printStackTrace();
-                }
-
-                if (finalinput != null) {
-
-                    // Picasso.get().load(generateURL(finalinput)).fit().centerInside().into(sampleimage);
-                    // Image image = ImageApi.call("what flights are overhead?", new DefaultImageParameters().setAppId("DEMO"));
-
-                    Picasso.get().load(finalinput).into(sampleimage);
-                }
-            }
-        });
+        question = findViewById(R.id.question);
+        answer = findViewById(R.id.answer);
+        url = findViewById(R.id.url);
+        progressCircle = findViewById(R.id.progressCircle);
+        qrCode = findViewById(R.id.qrCode);
     }
 
-    public void buttonClick(View v) {
+    public void solveClick(View v) {
 
-        bar.setVisibility(View.VISIBLE);
-        text.setText("");
+        progressCircle.setVisibility(View.VISIBLE);
+        answer.setText("");
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(field.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(question.getWindowToken(), 0);
 
-        String query = field.getText().toString();
+        String query = question.getText().toString();
 
         WolframQuerier cc = new WolframQuerier(this);
         cc.execute(query);
         // cc.getWAObject(query);
     }
 
+    public void getQRCodeClick(View v) {
+
+        String finalinput = null;
+        try {
+
+            finalinput = baseURL + URLEncoder.encode(question.getText().toString(), "UTF-8") + appID;
+            url.setText(finalinput);
+            finalinput = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(url.getText().toString(), "UTF-8") + "&size=250x250";
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        }
+
+        if (finalinput != null) {
+
+            Picasso.get().load(finalinput).into(qrCode);
+        }
+    }
+
     @Override
     public void onEvaluateCompleted(String result) {
 
-        bar.setVisibility(View.GONE);
+        progressCircle.setVisibility(View.GONE);
         String[] results = result.split("plaintext>");
 
         int temp = 0;
@@ -114,10 +93,11 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
 
                 if (temp == 0) {
 
-                    text.setText(s);
+                    answer.setText(s);
                 } else {
 
-                    text.setText(text.getText() + " = " + s);
+                    String text = answer.getText() + " = " + s;
+                    answer.setText(text);
                 }
                 temp++;
             }
@@ -127,11 +107,13 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
 
     @Override
     public String getBaseURL() {
+
         return baseURL;
     }
 
     @Override
     public String getAppID() {
+
         return appID;
     }
 }
@@ -152,8 +134,6 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
 //
 //        // Set properties of the query.
 //        query.setInput(userinput);
-//
-//
 //
 //        return engine.toURL(query);
 //    }
