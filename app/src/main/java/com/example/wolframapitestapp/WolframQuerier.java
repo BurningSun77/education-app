@@ -130,6 +130,7 @@ public class WolframQuerier extends AsyncTask<String, Void, String> {
         }
         return output;
     }
+
     protected void onPostExecute(String result) {
 
         callback.onEvaluateCompleted(result);

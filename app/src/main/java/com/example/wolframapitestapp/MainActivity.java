@@ -1,12 +1,17 @@
 package com.example.wolframapitestapp;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -17,7 +22,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 
-public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
+public class MainActivity extends FragmentActivity implements WolframAPIFetch {
 
     private TextView question;
     private TextView answer;
@@ -25,8 +30,17 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
     private ProgressBar progressCircle;
     private ImageView qrCode;
 
+    private Button answer1;
+    private Button answer2;
+    private Button answer3;
+    private Button answer4;
+
+    private Fragment wolframInfo;
+
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
+
+    private String[] wa_images;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +56,23 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
         url = findViewById(R.id.url);
         progressCircle = findViewById(R.id.progressCircle);
         qrCode = findViewById(R.id.qrCode);
+
+        answer1 = findViewById(R.id.answer1);
+        answer2 = findViewById(R.id.answer2);
+        answer3 = findViewById(R.id.answer3);
+        answer4 = findViewById(R.id.answer4);
+
+        AlertDialog.Builder help = new AlertDialog.Builder(this);
+        help.setTitle("Help");
+        ImageView helpImage = new ImageView(this);
+        if (wa_images[0] != null)
+            Picasso.get().load(wa_images[0]).into(qrCode);
+        help.setView(helpImage);
+        help.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) { }
+        });
+        AlertDialog dialog = help.create();
+        dialog.show();
     }
 
     public void solveClick(View v) {
@@ -54,12 +85,19 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
 
         String query = question.getText().toString();
 
-        WolframQuerier cc = new WolframQuerier(this);
-        cc.execute(query);
-        // cc.getWAObject(query);
+        WolframQuerier wq = new WolframQuerier(this);
+        wq.execute(query);
+        // wq.getWAObject(query);
     }
 
     public void getQRCodeClick(View v) {
+
+        answer1.setVisibility(View.GONE);
+        answer2.setVisibility(View.GONE);
+        answer3.setVisibility(View.GONE);
+        answer4.setVisibility(View.GONE);
+
+        url.setVisibility(View.VISIBLE);
 
         String finalinput = null;
         try {
@@ -82,10 +120,10 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
     public void onEvaluateCompleted(String result) {
 
         progressCircle.setVisibility(View.GONE);
-        String[] results = result.split("plaintext>");
+        String[] q_and_a = result.split("plaintext>");
 
         int temp = 0;
-        for (String s : results) {
+        for (String s : q_and_a) {
 
             if (s.length() < 20) {
 
@@ -103,6 +141,10 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
             }
             if (temp == 2) break;
         }
+
+        // from <img src="
+        // to   "/>
+        // set
     }
 
     @Override
