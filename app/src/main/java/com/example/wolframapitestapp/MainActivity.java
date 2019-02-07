@@ -1,6 +1,8 @@
 package com.example.wolframapitestapp;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
     private ProgressBar bar;
     private TextView text;
     private ImageView sampleimage;
+    private Button exitbutton;
 
     private String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private String appID = "&appid=R3U29Q-EVL4795U7X";
@@ -43,11 +46,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
         bar = findViewById(R.id.progressBar);
         text = findViewById(R.id.textView);
         sampleimage = findViewById(R.id.imageView);
+        exitbutton = findViewById(R.id.button7);
 
         // final TextView userinput = (TextView) findViewById(R.id.inputquery);
         // userinput.setText(R.string.app_name);
 
         final Button button = findViewById(R.id.button);
+
+
         button.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v) {
@@ -80,6 +86,13 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
                 }
             }
         });
+
+        exitbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, mathgeneratordemo.class));
+            }
+        });
     }
 
     public void buttonClick(View v) {
@@ -95,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
         WolframQuerier cc = new WolframQuerier(this);
         cc.execute(query);
     }
+
+
 
     @Override
     public void onEvaluateCompleted(String result) {
