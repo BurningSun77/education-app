@@ -2,7 +2,7 @@
     <string name="app_name">Wolframapitestapp</string>
     <string name="search_api">Search API</string>
     <string name="result">resultapi</string>
-    <string name="question">question</string>
+    <string name="question">32 * 6</string>
     <string name="answer">answer</string>
     <string name="url">url</string>
     <string name="get_qr_code">Get QR Code</string>

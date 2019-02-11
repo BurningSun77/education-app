@@ -1,16 +1,12 @@
 package com.example.wolframapitestapp;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -19,6 +15,7 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 
@@ -35,12 +32,21 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
     private Button answer3;
     private Button answer4;
 
-    private Fragment wolframInfo;
+    private Button help;
+    private Button getQRCode;
+    private Button solve;
+
+    private WolframQuerier wq;
 
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
 
+    private String wa_fullQuery;
+    private String wa_question;
+    private String wa_answer;
     private String[] wa_images;
+
+    private int helpToggle = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,32 +68,19 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         answer3 = findViewById(R.id.answer3);
         answer4 = findViewById(R.id.answer4);
 
-        AlertDialog.Builder help = new AlertDialog.Builder(this);
-        help.setTitle("Help");
-        ImageView helpImage = new ImageView(this);
-        if (wa_images[0] != null)
-            Picasso.get().load(wa_images[0]).into(qrCode);
-        help.setView(helpImage);
-        help.setPositiveButton("ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) { }
-        });
-        AlertDialog dialog = help.create();
-        dialog.show();
+        help = findViewById(R.id.help);
+        getQRCode = findViewById(R.id.getQRCode);
+        solve = findViewById(R.id.solve);
+
+        wq = new WolframQuerier(this);
+        wq.execute(question.getText().toString());
+        progressCircle.setVisibility(View.VISIBLE);
     }
 
     public void solveClick(View v) {
 
-        progressCircle.setVisibility(View.VISIBLE);
-        answer.setText("");
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(question.getWindowToken(), 0);
-
-        String query = question.getText().toString();
-
-        WolframQuerier wq = new WolframQuerier(this);
-        wq.execute(query);
-        // wq.getWAObject(query);
+        String answerText = wa_question + " = " + wa_answer;
+        answer.setText(answerText);
     }
 
     public void getQRCodeClick(View v) {
@@ -99,28 +92,73 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
 
         url.setVisibility(View.VISIBLE);
 
-        String finalinput = null;
+        String qrapi_call = null;
         try {
 
-            finalinput = baseURL + URLEncoder.encode(question.getText().toString(), "UTF-8") + appID;
-            url.setText(finalinput);
-            finalinput = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(url.getText().toString(), "UTF-8") + "&size=250x250";
+            qrapi_call = baseURL + URLEncoder.encode(question.getText().toString(), "UTF-8") + appID;
+            url.setText(qrapi_call);
+            qrapi_call = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(url.getText().toString(), "UTF-8") + "&size=250x250";
         } catch (UnsupportedEncodingException e) {
 
             e.printStackTrace();
         }
 
-        if (finalinput != null) {
+        if (qrapi_call != null) {
 
-            Picasso.get().load(finalinput).into(qrCode);
+            Picasso.get().load(qrapi_call).into(qrCode);
         }
+    }
+
+    public void helpClick(View v) {
+
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setTitle("Help");
+        ImageView helpImage = new ImageView(this);
+        if (wa_images != null) {
+
+            Picasso.get().load(wa_images[helpToggle]).into(helpImage);
+            if (++helpToggle == wa_images.length) helpToggle = 0;
+        }
+        dialogBuilder.setView(helpImage);
+        dialogBuilder.setPositiveButton("ok", new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) { }
+        });
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 
     @Override
     public void onEvaluateCompleted(String result) {
 
+        wa_fullQuery = result;
+        getWAImages();
+        getWAQ_A();
         progressCircle.setVisibility(View.GONE);
-        String[] q_and_a = result.split("plaintext>");
+        help.setVisibility(View.VISIBLE);
+        getQRCode.setVisibility(View.VISIBLE);
+        solve.setVisibility(View.VISIBLE);
+
+    }
+
+    private void getWAImages()
+    {
+        String temp = wa_fullQuery;
+        int size = temp.length() - temp.replace("<img src='", "<imgsrc='").length();
+        wa_images = new String[size];
+
+        for (int i = 0; i < size; i++) {
+
+            int start = temp.indexOf("<img src='") + 10;
+            temp = temp.substring(start);
+            int end = temp.indexOf("'");
+            wa_images[i] = temp.substring(0, end).replace("amp;", "");
+        }
+    }
+
+    private void getWAQ_A()
+    {
+        String[] q_and_a = wa_fullQuery.split("plaintext>");
 
         int temp = 0;
         for (String s : q_and_a) {
@@ -141,10 +179,6 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
             }
             if (temp == 2) break;
         }
-
-        // from <img src="
-        // to   "/>
-        // set
     }
 
     @Override
@@ -159,24 +193,3 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         return appID;
     }
 }
-
-//    Picasso.get().load("http://api.qrserver.com/v1/create-qr-code/?data=HelloWorld!&size=100x100").into(sampleimage);
-//    public static String generateURL(String userinput)
-//    {
-//        // PUT YOUR APPID HERE:
-//        String appid = "XXXX";
-//
-//        WAEngine engine = new WAEngine();
-//
-//        // These properties will be set in all the WAQuery objects created from this WAEngine.
-//        engine.setAppID(appid);
-//        engine.addFormat("plaintext");
-//        // Create the query.
-//        WAQuery query = engine.createQuery();
-//
-//        // Set properties of the query.
-//        query.setInput(userinput);
-//
-//        return engine.toURL(query);
-//    }
-
