@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch {
         exitbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, mathgeneratordemo.class));
+                startActivity(new Intent(MainActivity.this, mathgenerator2withanAPI.class));
             }
         });
     }
