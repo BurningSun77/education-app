@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity android:name=".MathlyGenerator"></activity>
-        <activity android:name=".mathlyDemo" />
+        <activity android:name=".MathlyDemo" />
         <activity android:name=".MainActivity">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.MAIN" />

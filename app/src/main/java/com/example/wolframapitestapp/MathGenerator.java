@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class MathGenerator {
 
-    private enum operations{ add , subtract, multiple,divide}
+    private enum operations{ add , subtract, multiple, divide }
 
     public static final int add=0;
     public static final int subtract=1;
@@ -29,7 +29,8 @@ public class MathGenerator {
     private boolean isseeded = false;
 
 
-    public  MathGenerator(){
+    public  MathGenerator() {
+
         random = new Random();
         //random.setSeed(theseed);
 
@@ -41,7 +42,7 @@ public class MathGenerator {
         problem();
     }
 
-    public  MathGenerator(long seed){
+    public  MathGenerator(long seed) {
 
         random = new Random(seed);
         theotherseed = seed;
@@ -56,7 +57,7 @@ public class MathGenerator {
         problem();
     }
 
-    public long getTheseed(){
+    public long getTheseed() {
 
         if(isseeded!=true){
 

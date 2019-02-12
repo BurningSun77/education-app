@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class mathlyDemo extends AppCompatActivity {
+public class MathlyDemo extends AppCompatActivity {
 
     private Button answer1;
     private Button answer2;
@@ -21,6 +21,7 @@ public class mathlyDemo extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
@@ -31,7 +32,7 @@ public class mathlyDemo extends AppCompatActivity {
         answer2 = findViewById(R.id.button4);
         answer3 = findViewById(R.id.button5);
         answer4 = findViewById(R.id.button6);
-        
+
         equation = findViewById(R.id.textView2);
         displayCount = findViewById(R.id.textView3);
 
@@ -80,9 +81,9 @@ public class mathlyDemo extends AppCompatActivity {
     }
 
 
-    public void checkansewer(Button button,MathGenerator mathGenerator){
-        int choice = Integer.parseInt(button.getText().toString());
+    public void checkansewer(Button button,MathGenerator mathGenerator) {
 
+        int choice = Integer.parseInt(button.getText().toString());
         if(choice == mathGenerator.getanswer()){
 
             winCount++;

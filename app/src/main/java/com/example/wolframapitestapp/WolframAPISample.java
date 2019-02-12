@@ -12,7 +12,7 @@ public class WolframAPISample {
 
     // PUT YOUR APPID HERE:
     private static String appid = "R3U29Q-EVL4795U7X";
-    
+
     public void displayQueryResults(String input) {
 
         // Use "pi" as the default query, or caller can supply it as the lone command-line argument.
