@@ -8,18 +8,15 @@ import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
 import com.wolfram.alpha.WASubpod;
 
-public class AlphaAPISample {
+public class WolframAPISample {
 
     // PUT YOUR APPID HERE:
     private static String appid = "R3U29Q-EVL4795U7X";
-
-
-    public static void main(String[] args) {
+    
+    public void displayQueryResults(String input) {
 
         // Use "pi" as the default query, or caller can supply it as the lone command-line argument.
-        String input = "pi";
-        if (args.length > 0)
-           input = args[0];
+        if (input == null) input = "pi";
 
         // The WAEngine is a factory for creating WAQuery objects,
         // and it also used to perform those queries. You can set properties of
@@ -38,7 +35,6 @@ public class AlphaAPISample {
 
         // Set properties of the query.
         query.setInput(input);
-
         try {
 
             // For educational purposes, print out the URL we are about to send:
@@ -63,15 +59,12 @@ public class AlphaAPISample {
                 // Got a result.
                 System.out.println("Successful query. Pods follow:\n");
                 for (WAPod pod : queryResult.getPods()) {
-
                     if (!pod.isError()) {
 
                         System.out.println(pod.getTitle());
                         System.out.println("------------");
                         for (WASubpod subpod : pod.getSubpods()) {
-
                             for (Object element : subpod.getContents()) {
-
                                 if (element instanceof WAPlainText) {
 
                                     System.out.println(((WAPlainText) element).getText());
@@ -90,5 +83,4 @@ public class AlphaAPISample {
             e.printStackTrace();
         }
     }
-
 }
