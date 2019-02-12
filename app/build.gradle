@@ -39,4 +39,6 @@ dependencies {
     implementation files('libs/httpcore-4.4.11.jar')
     implementation files('libs/WolframAlpha-1.1.jar')
     implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation files('libs/json-20180813.jar')
+    implementation 'io.github.kexanie.library:MathView:0.0.6'
 }
