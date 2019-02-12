@@ -159,25 +159,18 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
     private void getWAQ_A()
     {
         String[] q_and_a = wa_fullQuery.split("plaintext>");
+        int target = 0;
+        for (int i = 0; i < q_and_a.length; i++) {
+            if (q_and_a[i].length() < 20) {
+                if (target++ == 0) {
 
-        int temp = 0;
-        for (String s : q_and_a) {
-
-            if (s.length() < 20) {
-
-                s = s.substring(0, s.length() - 2);
-
-                if (temp == 0) {
-
-                    answer.setText(s);
+                    wa_question = q_and_a[i].substring(0, q_and_a[i].length() - 2);
                 } else {
 
-                    String text = answer.getText() + " = " + s;
-                    answer.setText(text);
+                    wa_answer = q_and_a[i].substring(0, q_and_a[i].length() - 2);
+                    break;
                 }
-                temp++;
             }
-            if (temp == 2) break;
         }
     }
 
