@@ -3,10 +3,6 @@ package com.example.wolframapitestapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
@@ -19,7 +15,6 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 
 
@@ -30,7 +25,6 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
     private TextView url;
     private ProgressBar progressCircle;
     private ImageView qrCode;
-    private Button exitbutton;
 
     private Button answer1;
     private Button answer2;
@@ -40,8 +34,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
     private Button help;
     private Button getQRCode;
     private Button solve;
-
-    private WolframQuerier wq;
+    private Button demoMathly;
 
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
@@ -61,7 +54,6 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
 
         Intent intent = getIntent();
         Uri data = intent.getData();
-        exitbutton = findViewById(R.id.button7);
 
         question = findViewById(R.id.question);
         answer = findViewById(R.id.answer);
@@ -77,9 +69,9 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         help = findViewById(R.id.help);
         getQRCode = findViewById(R.id.getQRCode);
         solve = findViewById(R.id.solve);
+        demoMathly = findViewById(R.id.demoMathly);
 
-        wq = new WolframQuerier(this);
-        wq.execute(question.getText().toString());
+        new WolframQuerier(this).execute(question.getText().toString());
         progressCircle.setVisibility(View.VISIBLE);
     }
 
@@ -113,13 +105,11 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
 
             Picasso.get().load(qrapi_call).into(qrCode);
         }
+    }
 
-        exitbutton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, mathgenerator2withanAPI.class));
-            }
-        });
+    public void demoMathlyClick(View v) {
+
+        startActivity(new Intent(MainActivity.this, MathlyGenerator.class));
     }
 
     public void helpClick(View v) {
@@ -153,6 +143,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         help.setVisibility(View.VISIBLE);
         getQRCode.setVisibility(View.VISIBLE);
         solve.setVisibility(View.VISIBLE);
+        demoMathly.setVisibility(View.VISIBLE);
 
     }
 

@@ -10,22 +10,17 @@ import java.net.URLEncoder;
 
 public class MathMLQuerier extends AsyncTask<String, Void, String> {
 
-    String baseURL;
-    String appID;
     MathMLAPIFetch callback;
 
     public MathMLQuerier(Context c) {
 
         callback = (MathMLAPIFetch) c;
-       // baseURL = callback.getBaseURL();
-        //appID = callback.getAppID();
     }
 
     protected String doInBackground(String... params) {
 
         String output = "";
         for (String query : params) {
-
             try {
 
                 URL url = new URL("https://math.ly/api/v1/algebra/linear-equations.json");
@@ -47,6 +42,7 @@ public class MathMLQuerier extends AsyncTask<String, Void, String> {
         }
         return output;
     }
+
     protected void onPostExecute(String result) {
 
         callback.onEvaluateCompleted(result);

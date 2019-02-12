@@ -42,6 +42,7 @@ public class MathGenerator {
     }
 
     public  MathGenerator(long seed){
+
         random = new Random(seed);
         theotherseed = seed;
 
@@ -56,80 +57,97 @@ public class MathGenerator {
     }
 
     public long getTheseed(){
+
         if(isseeded!=true){
+
             return theotherseed;
-        }
-        else {
+        } else {
+
             //return random
             return 10;
         }
 
     }
 
-    public void problem(){
+    public void problem() {
+
         switch (operation) {
+
             case add:
+
                 number3 = number1 + number2;
                 fakenumber1 = number1 + number2 + random.nextInt(10);
                 fakenumber2 = number1 + number2 + random.nextInt(10);
                 fakenumber3 = number1 + number2 - random.nextInt(10);
                 break;
             case subtract:
+
                 number3 = number1 - number2;
                 fakenumber1 = (number1 - number2) + random.nextInt(10);
                 fakenumber2 = (number1 - number2) + random.nextInt(10);
                 fakenumber3 = (number1 - number2) - random.nextInt(10);
                 break;
             case multiple:
+
                 number3 = number1 * number2;
                 fakenumber1 = (number1 * number2) + random.nextInt(10);
                 fakenumber2 = (number1 * number2) + random.nextInt(10);
                 fakenumber3 = (number1 * number2) + random.nextInt(10);
                 break;
             case divide:
+
                 number3 = number1 / number2;
                 fakenumber1 = (number1 / number2) + random.nextInt(10);
                 fakenumber2 = (number1 / number2) + random.nextInt(10);
                 fakenumber3 = (number1 / number2) - random.nextInt(10);
                 break;
-
-
         }
 
     }
 
-    public int getNumber1(){
+    public int getNumber1() {
+
         return number1;
     }
-    public int getNumber2(){
+    public int getNumber2() {
+
         return number2;
     }
-    public int getanswer(){
+    public int getanswer() {
+
         return number3;
     }
-    public int getf1answer(){
+    public int getf1answer() {
+
         return fakenumber1;
     }
-    public int getf2answer(){
+    public int getf2answer() {
+
         return fakenumber2;
     }
-    public int getf3answer(){
+    public int getf3answer() {
+
         return fakenumber3;
     }
-    public char getoperator(){
+    public char getoperator() {
+
         switch (operation) {
+
             case add:
+
                 return '+';
             case subtract:
+
                 return '-';
             case multiple:
+
                 return '*';
             case divide:
+
                return '/';
             default:
+
                 return ' ';
-
         }
-
     }
 }
