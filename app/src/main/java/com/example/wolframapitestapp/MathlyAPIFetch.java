@@ -1,6 +1,6 @@
 package com.example.wolframapitestapp;
 
-public interface MathMLAPIFetch {
+public interface MathlyAPIFetch {
 
     void onEvaluateCompleted(String result);
 }

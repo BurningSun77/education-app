@@ -6,15 +6,14 @@ import android.os.AsyncTask;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLEncoder;
 
-public class MathMLQuerier extends AsyncTask<String, Void, String> {
+public class MathlyQuerier extends AsyncTask<String, Void, String> {
 
-    MathMLAPIFetch callback;
+    MathlyAPIFetch callback;
 
-    public MathMLQuerier(Context c) {
+    public MathlyQuerier(Context c) {
 
-        callback = (MathMLAPIFetch) c;
+        callback = (MathlyAPIFetch) c;
     }
 
     protected String doInBackground(String... params) {

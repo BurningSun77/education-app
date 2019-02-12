@@ -10,7 +10,7 @@ import org.json.JSONObject;
 
 import io.github.kexanie.library.MathView;
 
-public class MathlyGenerator extends AppCompatActivity implements MathMLAPIFetch {
+public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch {
 
     private TextView equation;
     private TextView choices;
@@ -28,7 +28,7 @@ public class MathlyGenerator extends AppCompatActivity implements MathMLAPIFetch
         choices = findViewById(R.id.textView5);
         mathView = findViewById(R.id.formula_one);
 
-        MathMLQuerier mq = new MathMLQuerier(this);
+        MathlyQuerier mq = new MathlyQuerier(this);
         mq.execute("https://math.ly/api/v1/algebra/linear-equations.json");
     }
 

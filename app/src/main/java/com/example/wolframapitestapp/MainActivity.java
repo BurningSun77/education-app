@@ -34,7 +34,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
     private Button help;
     private Button getQRCode;
     private Button solve;
-    private Button demoMathly;
+    private Button mathly;
 
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
@@ -69,7 +69,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         help = findViewById(R.id.help);
         getQRCode = findViewById(R.id.getQRCode);
         solve = findViewById(R.id.solve);
-        demoMathly = findViewById(R.id.demoMathly);
+        mathly = findViewById(R.id.mathly);
 
         new WolframQuerier(this).execute(question.getText().toString());
         progressCircle.setVisibility(View.VISIBLE);
@@ -107,7 +107,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         }
     }
 
-    public void demoMathlyClick(View v) {
+    public void mathlyClick(View v) {
 
         startActivity(new Intent(MainActivity.this, MathlyGenerator.class));
     }
@@ -143,7 +143,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         help.setVisibility(View.VISIBLE);
         getQRCode.setVisibility(View.VISIBLE);
         solve.setVisibility(View.VISIBLE);
-        demoMathly.setVisibility(View.VISIBLE);
+        mathly.setVisibility(View.VISIBLE);
 
     }
 
