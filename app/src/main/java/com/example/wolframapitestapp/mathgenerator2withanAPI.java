@@ -72,8 +72,8 @@ public class mathgenerator2withanAPI extends AppCompatActivity implements Mathly
            jsonObject = new JSONObject(result);
            mathGeneratorMark2 = new MathGeneratorMark2(jsonObject);
            mathView.setText(jsonObject.getString("question"));
-           Intent getscore =getIntent();
-           wincount= getscore.getIntExtra("score",0);
+           Intent getScore =getIntent();
+           wincount= getScore.getIntExtra("score",0);
            displaycount.setText("Win Count: "+Integer.toString(wincount));
            mathGeneratorMark2.setWincount(wincount);
            for(int i=0;i<choices.length;++i){
