@@ -24,8 +24,13 @@
 
     <LinearLayout
         android:layout_width="240dp"
+<<<<<<< HEAD:app/src/main/res/layout/activity_mathly.xml
         android:layout_height="305dp"
         android:layout_marginTop="44dp"
+=======
+        android:layout_height="296dp"
+        android:layout_marginTop="16dp"
+>>>>>>> DAwork:app/src/main/res/layout/activity_mathgenerator2withan_api.xml
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -35,8 +40,13 @@
         <io.github.kexanie.library.MathView
             android:id="@+id/formula_one"
             android:layout_width="match_parent"
+<<<<<<< HEAD:app/src/main/res/layout/activity_mathly.xml
             android:layout_height="match_parent"
             app:text="When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\) and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$"></io.github.kexanie.library.MathView>
+=======
+            android:layout_height="165dp"
+            android:singleLine="false"></io.github.kexanie.library.MathView>
+>>>>>>> DAwork:app/src/main/res/layout/activity_mathgenerator2withan_api.xml
 
         <TextView
             android:id="@+id/textView5"
@@ -55,5 +65,59 @@
             app:layout_constraintVertical_bias="1.0" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/button8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="323dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="296dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button10"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="232dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="176dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button12"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="104dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="86dp"
+        android:layout_marginBottom="177dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

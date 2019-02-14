@@ -1,4 +1,6 @@
+
 apply plugin: 'com.android.application'
+
 
 android {
     compileSdkVersion 28
@@ -22,6 +24,9 @@ android {
         exclude 'META-INF/LICENSE'
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+        exclude 'org/jdom2/test/cases/special/TestIssue008.dtd'
+        exclude 'META-INF/jdom-info.xml'
+        //exclude 'org/jdom2/contrib'
     }
 }
 
