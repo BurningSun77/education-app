@@ -3,24 +3,16 @@ package com.example.wolframapitestapp;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.JsonToken;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.JSONTokener;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.URL;
 
 import io.github.kexanie.library.MathView;
 
-public class mathgenerator2withanAPI extends AppCompatActivity implements MathMLAPIFetch {
+public class mathgenerator2withanAPI extends AppCompatActivity implements MathlyAPIFetch {
 
     //private TextView equation;
     //private TextView choices;
@@ -36,7 +28,7 @@ public class mathgenerator2withanAPI extends AppCompatActivity implements MathML
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mathgenerator2withan_api);
+        setContentView(R.layout.activity_mathly);
 
         //equation = findViewById(R.id.textView5);
         //choices = findViewById(R.id.textView5);
@@ -66,7 +58,7 @@ public class mathgenerator2withanAPI extends AppCompatActivity implements MathML
         //     e.printStackTrace();
         // }
 
-        MathMLQuerier mq = new MathMLQuerier(this);
+        MathlyQuerier mq = new MathlyQuerier(this);
         mq.execute("https://math.ly/api/v1/algebra/linear-equations.json");
 
 
@@ -75,7 +67,7 @@ public class mathgenerator2withanAPI extends AppCompatActivity implements MathML
     }
 
     @Override
-    public void onEvaluateCompleted(String result) {
+    public void mathlyEvaluateCompleted(String result) {
        try {
            jsonObject = new JSONObject(result);
            mathGeneratorMark2 = new MathGeneratorMark2(jsonObject);
