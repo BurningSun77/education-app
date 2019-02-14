@@ -2,7 +2,6 @@ package com.example.wolframapitestapp;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -43,8 +42,9 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     private Button solve;
     private Button mathly;
 
-    private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
-    private final String appID = "&appid=R3U29Q-EVL4795U7X";
+    private int difficulty;
+    private int category;
+    private int subcategory;
 
     private JSONObject jsonObject;
 
@@ -57,41 +57,35 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
     private int helpToggle = 0;
 
+    DialogInterface.OnClickListener catagoryListener = new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcatagory();}
+    };
+
+    DialogInterface.OnClickListener subcatagoryListener = new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty();}
+    };
+
+    DialogInterface.OnClickListener difficultyListener = new DialogInterface.OnClickListener() {
+
+        @Override
+        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Intent intent = getIntent();
-        Uri data = intent.getData();
+        // Intent intent = getIntent();
+        // Uri data = intent.getData();
 
-        mv_question = findViewById(R.id.mv_question);
-        answer = findViewById(R.id.answer);
-        url = findViewById(R.id.url);
-        progressCircle = findViewById(R.id.progressCircle);
-        qrCode = findViewById(R.id.qrCode);
-
-        mv_answer1 = findViewById(R.id.mv_answer1);
-        mv_answer1.setClickable(true);
-        mv_answer1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
-
-        mv_answer2 = findViewById(R.id.mv_answer2);
-        mv_answer2.setClickable(true);
-        mv_answer2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
-
-        mv_answer3 = findViewById(R.id.mv_answer3);
-        mv_answer3.setClickable(true);
-        mv_answer3.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
-
-        mv_answer4 = findViewById(R.id.mv_answer4);
-        mv_answer4.setClickable(true);
-        mv_answer4.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
-
-        help = findViewById(R.id.help);
-        getQRCode = findViewById(R.id.getQRCode);
-        solve = findViewById(R.id.solve);
-        mathly = findViewById(R.id.mathly);
+        selectCatagory();
+        setUpViews();
 
         new MathlyQuerier(this).execute("https://math.ly/api/v1/algebra/linear-equations.json");
         progressCircle.setVisibility(View.VISIBLE);
@@ -194,6 +188,77 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         new WolframQuerier(this).execute(parseMathML(mv_question.getText()));
     }
 
+    private void setUpViews() {
+
+        mv_question = findViewById(R.id.mv_question);
+        answer = findViewById(R.id.answer);
+        url = findViewById(R.id.url);
+        progressCircle = findViewById(R.id.progressCircle);
+        qrCode = findViewById(R.id.qrCode);
+
+        mv_answer1 = findViewById(R.id.mv_answer1);
+        mv_answer1.setClickable(true);
+        mv_answer1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        mv_answer2 = findViewById(R.id.mv_answer2);
+        mv_answer2.setClickable(true);
+        mv_answer2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        mv_answer3 = findViewById(R.id.mv_answer3);
+        mv_answer3.setClickable(true);
+        mv_answer3.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        mv_answer4 = findViewById(R.id.mv_answer4);
+        mv_answer4.setClickable(true);
+        mv_answer4.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        help = findViewById(R.id.help);
+        getQRCode = findViewById(R.id.getQRCode);
+        solve = findViewById(R.id.solve);
+        mathly = findViewById(R.id.mathly);
+    }
+
+    private void selectCatagory() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a Catagory");
+        builder.setItems(categories, catagoryListener);
+        builder.setNegativeButton("Cancel", null);
+        AlertDialog actions = builder.create();
+        actions.show();
+    }
+
+    private void selectSubcatagory() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a Subcatagory");
+        switch (category) {
+
+            case 0:
+                builder.setItems(arithmetics, subcatagoryListener);
+                break;
+            case 1:
+                builder.setItems(algebras, subcatagoryListener);
+                break;
+            case 2:
+                builder.setItems(calculi, subcatagoryListener);
+                break;
+        }
+        builder.setNegativeButton("Cancel", null);
+        AlertDialog actions = builder.create();
+        actions.show();
+    }
+
+    private void selectDifficulty() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Select a Dificulty");
+        builder.setItems(difficulties, difficultyListener);
+        builder.setNegativeButton("Cancel", null);
+        AlertDialog actions = builder.create();
+        actions.show();
+    }
+
     private void getWAImages()
     {
         String temp = wa_fullQuery;
@@ -251,4 +316,20 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
         return appID;
     }
+
+    private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
+    private final String appID = "&appid=R3U29Q-EVL4795U7X";
+    private final String[] difficulties = { "beginner", "intermediate", "advanced" };
+    private final String[] categories = { "arithmetic", "algebra", "calculus"};
+    private final String[] arithmetics = {"Simple Arithmetic", "Fraction Arithmetic",
+            "Exponent & Radicals Arithmetic", "Simple Trigonometry", "Matrices Arithmetic" };
+    private final String[] algebras = { "Linear Equations", "Equations Containing Radicals",
+            "Equations Containing Absolute Values", "Quadratic Equations",
+            "Higher Order Polynomial Equations", "Equations Involving Fractions",
+            "Exponential Equations", "Logarithmic Equations", "Trigonometric Equations",
+            "Matrices Equations" };
+    private final String[] calculi = { "Polynomial Differentiation", "Trigonometric Differentiation",
+            "Exponents Differentiation", "Polynomial Integration", "Trigonometric Integration",
+            "Exponents Integration", "Polynomial Definite Integrals", "Trigonometric Definite Integrals",
+            "Exponents Definite Integrals", "First Order Differential Equations", "Second Order Differential Equations"};
 }
