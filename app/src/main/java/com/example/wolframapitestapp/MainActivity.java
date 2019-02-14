@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
@@ -14,22 +15,28 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
+import io.github.kexanie.library.MathView;
 
-public class MainActivity extends FragmentActivity implements WolframAPIFetch {
 
-    private TextView question;
+public class MainActivity extends FragmentActivity implements WolframAPIFetch, MathlyAPIFetch {
+
+    private MathView mv_question;
     private TextView answer;
     private TextView url;
     private ProgressBar progressCircle;
     private ImageView qrCode;
 
-    private Button answer1;
-    private Button answer2;
-    private Button answer3;
-    private Button answer4;
+    private MathView mv_answer1;
+    private MathView mv_answer2;
+    private MathView mv_answer3;
+    private MathView mv_answer4;
 
     private Button help;
     private Button getQRCode;
@@ -39,10 +46,14 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
 
+    private JSONObject jsonObject;
+
     private String wa_fullQuery;
     private String wa_question;
     private String wa_answer;
     private String[] wa_images;
+
+    private String[] choices;
 
     private int helpToggle = 0;
 
@@ -55,23 +66,34 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         Intent intent = getIntent();
         Uri data = intent.getData();
 
-        question = findViewById(R.id.question);
+        mv_question = findViewById(R.id.mv_question);
         answer = findViewById(R.id.answer);
         url = findViewById(R.id.url);
         progressCircle = findViewById(R.id.progressCircle);
         qrCode = findViewById(R.id.qrCode);
 
-        answer1 = findViewById(R.id.answer1);
-        answer2 = findViewById(R.id.answer2);
-        answer3 = findViewById(R.id.answer3);
-        answer4 = findViewById(R.id.answer4);
+        mv_answer1 = findViewById(R.id.mv_answer1);
+        mv_answer1.setClickable(true);
+        mv_answer1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        mv_answer2 = findViewById(R.id.mv_answer2);
+        mv_answer2.setClickable(true);
+        mv_answer2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        mv_answer3 = findViewById(R.id.mv_answer3);
+        mv_answer3.setClickable(true);
+        mv_answer3.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        mv_answer4 = findViewById(R.id.mv_answer4);
+        mv_answer4.setClickable(true);
+        mv_answer4.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         help = findViewById(R.id.help);
         getQRCode = findViewById(R.id.getQRCode);
         solve = findViewById(R.id.solve);
         mathly = findViewById(R.id.mathly);
 
-        new WolframQuerier(this).execute(question.getText().toString());
+        new MathlyQuerier(this).execute("https://math.ly/api/v1/algebra/linear-equations.json");
         progressCircle.setVisibility(View.VISIBLE);
     }
 
@@ -83,17 +105,17 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
 
     public void getQRCodeClick(View v) {
 
-        answer1.setVisibility(View.GONE);
-        answer2.setVisibility(View.GONE);
-        answer3.setVisibility(View.GONE);
-        answer4.setVisibility(View.GONE);
+        mv_answer1.setVisibility(View.GONE);
+        mv_answer2.setVisibility(View.GONE);
+        mv_answer3.setVisibility(View.GONE);
+        mv_answer4.setVisibility(View.GONE);
 
         url.setVisibility(View.VISIBLE);
 
         String qrapi_call = null;
         try {
 
-            qrapi_call = baseURL + URLEncoder.encode(question.getText().toString(), "UTF-8") + appID;
+            qrapi_call = baseURL + URLEncoder.encode(parseMathML(mv_question.getText()), "UTF-8") + appID;
             url.setText(qrapi_call);
             qrapi_call = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(url.getText().toString(), "UTF-8") + "&size=250x250";
         } catch (UnsupportedEncodingException e) {
@@ -134,7 +156,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
 
 
     @Override
-    public void onEvaluateCompleted(String result) {
+    public void waEvaluateCompleted(String result) {
 
         wa_fullQuery = result;
         getWAImages();
@@ -144,7 +166,32 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
         getQRCode.setVisibility(View.VISIBLE);
         solve.setVisibility(View.VISIBLE);
         mathly.setVisibility(View.VISIBLE);
+    }
 
+    @Override
+    public void mathlyEvaluateCompleted(String result) {
+
+        try {
+
+            jsonObject = new JSONObject(result);
+            JSONArray jsonArray = jsonObject.getJSONArray("choices");
+            choices = new String[jsonArray.length()];
+            for (int i = 0; i < choices.length; i++) {
+
+                choices[i] = jsonArray.optString(i);
+            }
+            wa_question = jsonObject.getString("question");
+            mv_question.setText(wa_question);
+            mv_answer1.setText(choices[0]);
+            mv_answer2.setText(choices[1]);
+            mv_answer3.setText(choices[2]);
+            mv_answer4.setText(choices[3]);
+        } catch (JSONException e) {
+
+            e.printStackTrace();
+        }
+
+        new WolframQuerier(this).execute(parseMathML(mv_question.getText()));
     }
 
     private void getWAImages()
@@ -178,6 +225,19 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch {
                 }
             }
         }
+    }
+
+    private String parseMathML(@org.jetbrains.annotations.NotNull String m) {
+
+        String result = "";
+        while (m.contains(">")) {
+
+            m = m.substring(m.indexOf(">") + 1);
+            if (!m.contains("<")) break;
+            result += m.substring(0, m.indexOf("<"));
+            m = m.substring(m.indexOf("<"));
+        }
+        return result;
     }
 
     @Override

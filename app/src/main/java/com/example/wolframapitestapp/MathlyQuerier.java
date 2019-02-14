@@ -44,6 +44,6 @@ public class MathlyQuerier extends AsyncTask<String, Void, String> {
 
     protected void onPostExecute(String result) {
 
-        callback.onEvaluateCompleted(result);
+        callback.mathlyEvaluateCompleted(result);
     }
 }

@@ -33,7 +33,7 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
     }
 
     @Override
-    public void onEvaluateCompleted(String result) {
+    public void mathlyEvaluateCompleted(String result) {
 
         try {
 

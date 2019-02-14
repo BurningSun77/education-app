@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:engine="MathJax"
+    xmlns:text="When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\)
+        and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,7 +21,7 @@
 
     <TextView
         android:id="@+id/answer"
-        android:layout_width="159dp"
+        android:layout_width="160dp"
         android:layout_height="40dp"
         android:layout_marginTop="60dp"
         android:text="@string/answer"
@@ -38,18 +41,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/question"
-        android:layout_width="159dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/question"
-        android:textAlignment="center"
-        android:textSize="30sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/solve"
@@ -103,54 +94,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/answer1"
-        android:layout_width="120dp"
-        android:layout_height="75dp"
-        android:text="@string/answer1"
-        app:layout_constraintBottom_toTopOf="@+id/answer3"
-        app:layout_constraintEnd_toStartOf="@+id/answer2"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/answer"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <Button
-        android:id="@+id/answer2"
-        android:layout_width="120dp"
-        android:layout_height="75dp"
-        android:text="@string/answer2"
-        app:layout_constraintBottom_toTopOf="@+id/answer4"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/answer1"
-        app:layout_constraintTop_toBottomOf="@+id/answer"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <Button
-        android:id="@+id/answer4"
-        android:layout_width="120dp"
-        android:layout_height="75dp"
-        android:text="@string/answer4"
-        app:layout_constraintBottom_toTopOf="@+id/url"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/answer3"
-        app:layout_constraintTop_toBottomOf="@+id/answer2" />
-
-    <Button
-        android:id="@+id/answer3"
-        android:layout_width="120dp"
-        android:layout_height="75dp"
-        android:text="@string/answer3"
-        app:layout_constraintBottom_toTopOf="@+id/url"
-        app:layout_constraintEnd_toStartOf="@+id/answer4"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/answer1" />
-
-    <Button
         android:id="@+id/help"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -159,6 +102,101 @@
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <view
+        android:id="@+id/mv_question"
+        class="io.github.kexanie.library.MathView"
+        id="@+id/view"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <view xmlns:engine="MathJax"
+        xmlns:text="When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\)
+        and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$"
+        android:id="@+id/mv_answer1"
+        class="io.github.kexanie.library.MathView"
+        id="@+id/view1"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/mv_answer3"
+        app:layout_constraintEnd_toStartOf="@+id/mv_answer2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/answer"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <view xmlns:engine="MathJax"
+        xmlns:text="When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\)
+        and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$"
+        android:id="@+id/mv_answer2"
+        class="io.github.kexanie.library.MathView"
+        id="@+id/view2"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/mv_answer4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mv_answer1"
+        app:layout_constraintTop_toBottomOf="@+id/answer"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <view xmlns:engine="MathJax"
+        xmlns:text="When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\)
+        and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$"
+        android:id="@+id/mv_answer3"
+        class="io.github.kexanie.library.MathView"
+        id="@+id/view3"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/url"
+        app:layout_constraintEnd_toStartOf="@+id/mv_answer4"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/mv_answer1" />
+
+    <view xmlns:engine="MathJax"
+        xmlns:text="When \\(a \\ne 0\\), there are two solutions to \\(ax^2 + bx + c = 0\\)
+        and they are $$x = {-b \\pm \\sqrt{b^2-4ac} \\over 2a}.$$"
+        android:id="@+id/mv_answer4"
+        class="io.github.kexanie.library.MathView"
+        id="@+id/view4"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintBottom_toTopOf="@+id/url"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/mv_answer3"
+        app:layout_constraintTop_toBottomOf="@+id/mv_answer2" />
+
+    <view
+        android:id="@+id/mv_answer5"
+        class="io.github.kexanie.library.MathView"
+        id="@+id/view5"
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textColor="@android:color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="377dp" />
 
 
 </android.support.constraint.ConstraintLayout>

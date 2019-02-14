@@ -2,5 +2,5 @@ package com.example.wolframapitestapp;
 
 public interface MathlyAPIFetch {
 
-    void onEvaluateCompleted(String result);
+    void mathlyEvaluateCompleted(String result);
 }
