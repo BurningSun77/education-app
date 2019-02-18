@@ -22,7 +22,7 @@ public class MathlyQuerier extends AsyncTask<String, Void, String> {
         for (String query : params) {
             try {
 
-                URL url = new URL("https://math.ly/api/v1/algebra/linear-equations.json");
+                URL url = new URL(query);
 
                 BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
 

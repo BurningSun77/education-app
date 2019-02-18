@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,9 +43,9 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     private Button solve;
     private Button mathly;
 
-    private int difficulty;
-    private int category;
-    private int subcategory;
+    private int difficulty = -1;
+    private int category = -1;
+    private int subcategory = -1;
 
     private JSONObject jsonObject;
 
@@ -60,19 +61,19 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     DialogInterface.OnClickListener catagoryListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcatagory();}
+        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcategory(); }
     };
 
     DialogInterface.OnClickListener subcatagoryListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty();}
+        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty(); }
     };
 
     DialogInterface.OnClickListener difficultyListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; }
+        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; runAPIs(); }
     };
 
     @Override
@@ -84,11 +85,8 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         // Intent intent = getIntent();
         // Uri data = intent.getData();
 
-        selectCatagory();
         setUpViews();
-
-        new MathlyQuerier(this).execute("https://math.ly/api/v1/algebra/linear-equations.json");
-        progressCircle.setVisibility(View.VISIBLE);
+        selectCategory();
     }
 
     public void solveClick(View v) {
@@ -218,20 +216,60 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         mathly = findViewById(R.id.mathly);
     }
 
-    private void selectCatagory() {
+    private void runAPIs() {
+
+        new MathlyQuerier(this).execute(getMathlyURL());
+        progressCircle.setVisibility(View.VISIBLE);
+    }
+
+    private String getMathlyURL() {
+
+        String url = "https://math.ly/api/v1/";
+        if (category >= 0) {
+            if (categories[category] != null) {
+
+                url = url + categories[category].replace(' ', '-') + "/";
+                switch (category) {
+
+                    case 0:
+                        url = url + arithmetics[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
+                        break;
+                    case 1:
+                        url = url + algebras[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
+                        break;
+                    case 2:
+                        url = url + calculi[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
+                        break;
+                }
+            } else {
+
+                url += "arithmetic/simple-arithmetic.json";
+            }
+        }
+        if (difficulty >= 0) {
+
+            url = (url + "?difficulty=" + difficulties[difficulty]).toLowerCase();
+        }
+
+        Log.d("Fetching from Math.ly", url);
+
+        return url;
+    }
+
+    private void selectCategory() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Catagory");
+        builder.setTitle("Select a Category");
         builder.setItems(categories, catagoryListener);
         builder.setNegativeButton("Cancel", null);
         AlertDialog actions = builder.create();
         actions.show();
     }
 
-    private void selectSubcatagory() {
+    private void selectSubcategory() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Subcatagory");
+        builder.setTitle("Select a Subcategory");
         switch (category) {
 
             case 0:
@@ -319,10 +357,10 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
-    private final String[] difficulties = { "beginner", "intermediate", "advanced" };
-    private final String[] categories = { "arithmetic", "algebra", "calculus"};
-    private final String[] arithmetics = {"Simple Arithmetic", "Fraction Arithmetic",
-            "Exponent & Radicals Arithmetic", "Simple Trigonometry", "Matrices Arithmetic" };
+    private final String[] difficulties = { "Beginner", "Intermediate", "Advanced" };
+    private final String[] categories = { "Arithmetic", "Algebra", "Calculus"};
+    private final String[] arithmetics = {"Simple", "Fractions",
+            "Exponents and Radicals", "Simple Trigonometry", "Matrices" };
     private final String[] algebras = { "Linear Equations", "Equations Containing Radicals",
             "Equations Containing Absolute Values", "Quadratic Equations",
             "Higher Order Polynomial Equations", "Equations Involving Fractions",
