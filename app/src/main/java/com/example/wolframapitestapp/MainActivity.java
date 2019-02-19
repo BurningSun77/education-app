@@ -51,6 +51,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
     private String wa_fullQuery;
     private String wa_question;
+    private String ml_question;
     private String wa_answer;
     private String[] wa_images;
 
@@ -92,7 +93,8 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     public void solveClick(View v) {
 
         String answerText = wa_question + " = " + wa_answer;
-        answer.setText(answerText);
+        // answer.setText(answerText);
+        answer.setText(parseMathMLFull(ml_question));
     }
 
     public void getQRCodeClick(View v) {
@@ -172,8 +174,8 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
                 choices[i] = jsonArray.optString(i);
             }
-            wa_question = jsonObject.getString("question");
-            mv_question.setText(wa_question);
+            ml_question = jsonObject.getString("question");
+            mv_question.setText(ml_question);
             mv_answer1.setText(choices[0]);
             mv_answer2.setText(choices[1]);
             mv_answer3.setText(choices[2]);
@@ -183,7 +185,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
             e.printStackTrace();
         }
 
-        new WolframQuerier(this).execute(parseMathML(mv_question.getText()));
+        new WolframQuerier(this).execute(parseMathMLFull(ml_question));
     }
 
     private void setUpViews() {
@@ -246,10 +248,12 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
                 url += "arithmetic/simple-arithmetic.json";
             }
         }
-        if (difficulty >= 0) {
+        if (difficulty >= 0 && subcategory < 2) {
 
-            url = (url + "?difficulty=" + difficulties[difficulty]).toLowerCase();
+            url = (url + "?difficulty=" + difficulties[difficulty]);
         }
+
+        url = url.toLowerCase();
 
         Log.d("Fetching from Math.ly", url);
 
@@ -339,6 +343,97 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
             if (!m.contains("<")) break;
             result += m.substring(0, m.indexOf("<"));
             m = m.substring(m.indexOf("<"));
+        }
+        return result;
+    }
+
+    private String parseMathMLFull(@org.jetbrains.annotations.NotNull String m) {
+
+        String result = "";
+        while (m.contains("<")) {
+
+            m = m.substring(m.indexOf("<") + 1);
+            String tag = m.substring(0, m.indexOf(">"));
+            String root;
+            String temp;
+
+            m = m.replace("<mrow>", "").replace("</mrow>", "");
+
+            m = m.substring(m.indexOf(">") + 1);
+            switch (tag) {
+
+                case "msqrt":
+                    result += "sqrt(";
+                    break;
+                case "\\/msqrt":
+                    result += ")";
+                    break;
+                case "mroot":
+                    root = m.substring(0, m.indexOf("/mroot"));
+                    temp = "";
+                    while (root.contains(">")) {
+
+                        root = root.substring(root.indexOf(">") + 1);
+                        if (!root.contains("<")) break;
+                        if (temp.length() == 0) {
+
+                            temp = root.substring(0, root.indexOf("<"));
+                        } else {
+
+                            root = root.substring(root.indexOf(">") + 1);
+                            temp = root.substring(0, root.indexOf("<")) + "root(" + temp + ")";
+                            break;
+                        }
+                        root = root.substring(root.indexOf("<"));
+                    }
+                    result += temp;
+                    break;
+                case "mfrac":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += "(" + m.substring(0, m.indexOf("<")) + " / ";
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<")) + ")";
+                    break;
+                case "msup":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += "(" + m.substring(0, m.indexOf("<")) + "^";
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<")) + ")";
+                    break;
+                case "msub":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<"));
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<"));
+                    break;
+                case "mi":
+                case "mn":
+                    result += m.substring(0, m.indexOf("<")) + " ";
+                    break;
+                case "mo":
+                    if (m.substring(1, 2).equals("&")) {
+
+                        switch (m.substring(1, m.indexOf("<") - 1)) {
+
+                            case "&Cross;":
+                                result += "×";
+                                break;
+                            case "&#xF7;":
+                                result += "÷";
+                                break;
+                            default:
+                                result += m.substring(0, m.indexOf("<"));
+                                break;
+                        }
+                    } else {
+
+                        result += m.substring(0, m.indexOf("<"));
+                    }
+                    break;
+            }
         }
         return result;
     }
