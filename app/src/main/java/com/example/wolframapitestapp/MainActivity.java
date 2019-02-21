@@ -38,6 +38,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     private MathView mv_answer2;
     private MathView mv_answer3;
     private MathView mv_answer4;
+    private MathView mv_answer5;
 
     private Button help;
     private Button getQRCode;
@@ -162,6 +163,27 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         }
     };
 
+    CheckForClickTouchLister answer5Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 4) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -265,6 +287,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
             mv_answer2.setText(choices[1]);
             mv_answer3.setText(choices[2]);
             mv_answer4.setText(choices[3]);
+            mv_answer5.setText(choices[4]);
         } catch (JSONException e) {
 
             e.printStackTrace();
@@ -300,6 +323,11 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         mv_answer4.setClickable(true);
         mv_answer4.setOnTouchListener(answer4Listener);
         mv_answer4.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+
+        mv_answer5 = findViewById(R.id.mv_answer5);
+        mv_answer5.setClickable(true);
+        mv_answer5.setOnTouchListener(answer5Listener);
+        mv_answer5.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         help = findViewById(R.id.help);
         getQRCode = findViewById(R.id.getQRCode);
