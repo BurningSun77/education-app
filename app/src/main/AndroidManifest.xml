@@ -32,6 +32,13 @@
             </intent-filter>
 
         </activity>
+        <activity android:name=".MenuActivity">
+
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+
+        </activity>
         <activity android:name=".MainActivity">
 
             <intent-filter android:autoVerify="true">
