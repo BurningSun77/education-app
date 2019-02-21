@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -75,6 +76,90 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
         @Override
         public void onClick(DialogInterface dialog, int selection) { difficulty = selection; runAPIs(); }
+    };
+
+    CheckForClickTouchLister answer1Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 0) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
+    CheckForClickTouchLister answer2Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 1) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
+    CheckForClickTouchLister answer3Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 2) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
+    CheckForClickTouchLister answer4Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 3) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
     };
 
     @Override
@@ -198,18 +283,22 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
         mv_answer1 = findViewById(R.id.mv_answer1);
         mv_answer1.setClickable(true);
+        mv_answer1.setOnTouchListener(answer1Listener);
         mv_answer1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         mv_answer2 = findViewById(R.id.mv_answer2);
         mv_answer2.setClickable(true);
+        mv_answer2.setOnTouchListener(answer2Listener);
         mv_answer2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         mv_answer3 = findViewById(R.id.mv_answer3);
         mv_answer3.setClickable(true);
+        mv_answer3.setOnTouchListener(answer3Listener);
         mv_answer3.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         mv_answer4 = findViewById(R.id.mv_answer4);
         mv_answer4.setClickable(true);
+        mv_answer4.setOnTouchListener(answer4Listener);
         mv_answer4.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         help = findViewById(R.id.help);
