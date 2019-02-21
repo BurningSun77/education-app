@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -42,14 +44,15 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     private Button solve;
     private Button mathly;
 
-    private int difficulty;
-    private int category;
-    private int subcategory;
+    private int difficulty = -1;
+    private int category = -1;
+    private int subcategory = -1;
 
     private JSONObject jsonObject;
 
     private String wa_fullQuery;
     private String wa_question;
+    private String ml_question;
     private String wa_answer;
     private String[] wa_images;
 
@@ -60,19 +63,103 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     DialogInterface.OnClickListener catagoryListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcatagory();}
+        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcategory(); }
     };
 
     DialogInterface.OnClickListener subcatagoryListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty();}
+        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty(); }
     };
 
     DialogInterface.OnClickListener difficultyListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; }
+        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; runAPIs(); }
+    };
+
+    CheckForClickTouchLister answer1Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 0) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
+    CheckForClickTouchLister answer2Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 1) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
+    CheckForClickTouchLister answer3Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 2) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
+    CheckForClickTouchLister answer4Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 3) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
     };
 
     @Override
@@ -84,17 +171,15 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         // Intent intent = getIntent();
         // Uri data = intent.getData();
 
-        selectCatagory();
         setUpViews();
-
-        new MathlyQuerier(this).execute("https://math.ly/api/v1/algebra/linear-equations.json");
-        progressCircle.setVisibility(View.VISIBLE);
+        selectCategory();
     }
 
     public void solveClick(View v) {
 
         String answerText = wa_question + " = " + wa_answer;
-        answer.setText(answerText);
+        // answer.setText(answerText);
+        answer.setText(parseMathMLFull(ml_question));
     }
 
     public void getQRCodeClick(View v) {
@@ -174,8 +259,8 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
                 choices[i] = jsonArray.optString(i);
             }
-            wa_question = jsonObject.getString("question");
-            mv_question.setText(wa_question);
+            ml_question = jsonObject.getString("question");
+            mv_question.setText(ml_question);
             mv_answer1.setText(choices[0]);
             mv_answer2.setText(choices[1]);
             mv_answer3.setText(choices[2]);
@@ -185,7 +270,7 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
             e.printStackTrace();
         }
 
-        new WolframQuerier(this).execute(parseMathML(mv_question.getText()));
+        new WolframQuerier(this).execute(parseMathMLFull(ml_question));
     }
 
     private void setUpViews() {
@@ -198,18 +283,22 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
         mv_answer1 = findViewById(R.id.mv_answer1);
         mv_answer1.setClickable(true);
+        mv_answer1.setOnTouchListener(answer1Listener);
         mv_answer1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         mv_answer2 = findViewById(R.id.mv_answer2);
         mv_answer2.setClickable(true);
+        mv_answer2.setOnTouchListener(answer2Listener);
         mv_answer2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         mv_answer3 = findViewById(R.id.mv_answer3);
         mv_answer3.setClickable(true);
+        mv_answer3.setOnTouchListener(answer3Listener);
         mv_answer3.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         mv_answer4 = findViewById(R.id.mv_answer4);
         mv_answer4.setClickable(true);
+        mv_answer4.setOnTouchListener(answer4Listener);
         mv_answer4.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
 
         help = findViewById(R.id.help);
@@ -218,20 +307,62 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         mathly = findViewById(R.id.mathly);
     }
 
-    private void selectCatagory() {
+    private void runAPIs() {
+
+        new MathlyQuerier(this).execute(getMathlyURL());
+        progressCircle.setVisibility(View.VISIBLE);
+    }
+
+    private String getMathlyURL() {
+
+        String url = "https://math.ly/api/v1/";
+        if (category >= 0) {
+            if (categories[category] != null) {
+
+                url = url + categories[category].replace(' ', '-') + "/";
+                switch (category) {
+
+                    case 0:
+                        url = url + arithmetics[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
+                        break;
+                    case 1:
+                        url = url + algebras[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
+                        break;
+                    case 2:
+                        url = url + calculi[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
+                        break;
+                }
+            } else {
+
+                url += "arithmetic/simple-arithmetic.json";
+            }
+        }
+        if (difficulty >= 0 && subcategory < 2) {
+
+            url = (url + "?difficulty=" + difficulties[difficulty]);
+        }
+
+        url = url.toLowerCase();
+
+        Log.d("Fetching from Math.ly", url);
+
+        return url;
+    }
+
+    private void selectCategory() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Catagory");
+        builder.setTitle("Select a Category");
         builder.setItems(categories, catagoryListener);
         builder.setNegativeButton("Cancel", null);
         AlertDialog actions = builder.create();
         actions.show();
     }
 
-    private void selectSubcatagory() {
+    private void selectSubcategory() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Subcatagory");
+        builder.setTitle("Select a Subcategory");
         switch (category) {
 
             case 0:
@@ -305,6 +436,97 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
         return result;
     }
 
+    private String parseMathMLFull(@org.jetbrains.annotations.NotNull String m) {
+
+        String result = "";
+        while (m.contains("<")) {
+
+            m = m.substring(m.indexOf("<") + 1);
+            String tag = m.substring(0, m.indexOf(">"));
+            String root;
+            String temp;
+
+            m = m.replace("<mrow>", "").replace("</mrow>", "");
+
+            m = m.substring(m.indexOf(">") + 1);
+            switch (tag) {
+
+                case "msqrt":
+                    result += "sqrt(";
+                    break;
+                case "\\/msqrt":
+                    result += ")";
+                    break;
+                case "mroot":
+                    root = m.substring(0, m.indexOf("/mroot"));
+                    temp = "";
+                    while (root.contains(">")) {
+
+                        root = root.substring(root.indexOf(">") + 1);
+                        if (!root.contains("<")) break;
+                        if (temp.length() == 0) {
+
+                            temp = root.substring(0, root.indexOf("<"));
+                        } else {
+
+                            root = root.substring(root.indexOf(">") + 1);
+                            temp = root.substring(0, root.indexOf("<")) + "root(" + temp + ")";
+                            break;
+                        }
+                        root = root.substring(root.indexOf("<"));
+                    }
+                    result += temp;
+                    break;
+                case "mfrac":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += "(" + m.substring(0, m.indexOf("<")) + " / ";
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<")) + ")";
+                    break;
+                case "msup":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += "(" + m.substring(0, m.indexOf("<")) + "^";
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<")) + ")";
+                    break;
+                case "msub":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<"));
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<"));
+                    break;
+                case "mi":
+                case "mn":
+                    result += m.substring(0, m.indexOf("<")) + " ";
+                    break;
+                case "mo":
+                    if (m.substring(1, 2).equals("&")) {
+
+                        switch (m.substring(1, m.indexOf("<") - 1)) {
+
+                            case "&Cross;":
+                                result += "×";
+                                break;
+                            case "&#xF7;":
+                                result += "÷";
+                                break;
+                            default:
+                                result += m.substring(0, m.indexOf("<"));
+                                break;
+                        }
+                    } else {
+
+                        result += m.substring(0, m.indexOf("<"));
+                    }
+                    break;
+            }
+        }
+        return result;
+    }
+
     @Override
     public String getBaseURL() {
 
@@ -319,10 +541,10 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
-    private final String[] difficulties = { "beginner", "intermediate", "advanced" };
-    private final String[] categories = { "arithmetic", "algebra", "calculus"};
-    private final String[] arithmetics = {"Simple Arithmetic", "Fraction Arithmetic",
-            "Exponent & Radicals Arithmetic", "Simple Trigonometry", "Matrices Arithmetic" };
+    private final String[] difficulties = { "Beginner", "Intermediate", "Advanced" };
+    private final String[] categories = { "Arithmetic", "Algebra", "Calculus"};
+    private final String[] arithmetics = {"Simple", "Fractions",
+            "Exponents and Radicals", "Simple Trigonometry", "Matrices" };
     private final String[] algebras = { "Linear Equations", "Equations Containing Radicals",
             "Equations Containing Absolute Values", "Quadratic Equations",
             "Higher Order Polynomial Equations", "Equations Involving Fractions",
