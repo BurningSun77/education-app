@@ -1,6 +1,15 @@
 package com.example.wolframapitestapp;
 
+import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.AsyncTask;
+import android.os.Build;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -21,9 +30,11 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
     private  MathView mathView;
     private  MathGeneratorMark2 mathGeneratorMark2;
     private Button[] choices = new Button[5];
+    private Button camerabutton ;
     private int wincount;
+    private String uri;
     private TextView displaycount;
-
+    private int Camera_Permission=1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -40,7 +51,34 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
         choices[3] = findViewById(R.id.button11);
         choices[4] = findViewById(R.id.button12);
         displaycount = findViewById(R.id.textView6);
+        camerabutton = findViewById(R.id.buttonC);
 
+
+        camerabutton.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v){
+
+                // camera code, uncomment before final build
+
+              // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+              //     if (ContextCompat.checkSelfPermission(MathlyGenerator.this,
+              //             Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+              //         // Toast.makeText(SimpleScannerActivity.this, "You have already granted this permission!",
+              //         // Toast.LENGTH_SHORT).show();
+              //         startActivity(new Intent(MathlyGenerator.this, SimpleScannerActivity.class));
+              //     } else {
+              //         requestStoragePermission();
+              //     }
+              // }
+                startActivity(new Intent(MathlyGenerator.this, UserQRgenerator.class));
+
+
+
+
+
+            }
+
+        });
 
 
         // int start=8;
@@ -56,9 +94,15 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
         // } catch (JSONException e) {
         //     e.printStackTrace();
         // }
+        Intent geturi= getIntent();
+        uri= geturi.getStringExtra("uri");
+        if (uri==null){
+            uri=         "https://math.ly/api/v1/algebra/linear-equations.json";
+        }
+
 
         MathlyQuerier mq = new MathlyQuerier(this);
-        mq.execute("https://math.ly/api/v1/algebra/linear-equations.json");
+        mq.execute(uri);
 
 
 
@@ -113,5 +157,48 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
         Intent intent = getIntent();
         intent.putExtra("score",wincount);
         startActivity(getIntent());
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, 1);
+        }
+    }
+
+    private void requestStoragePermission()
+
+    {
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                Manifest.permission.CAMERA)) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Permission needed")
+                    .setMessage("I need to use the camera in order to see QR codes")
+                    .setPositiveButton("ok", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ActivityCompat.requestPermissions(MathlyGenerator.this,
+                                    new String[]{Manifest.permission.CAMERA}, Camera_Permission);
+                            //thread = new Thread(MathlyGenerator.this);
+
+
+                            startActivity(new Intent(MathlyGenerator.this, SimpleScannerActivity.class));
+
+
+                        }
+                    })
+                    .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .create().show();
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[] {Manifest.permission.CAMERA}, Camera_Permission);
+        }
+
     }
 }
