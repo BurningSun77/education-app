@@ -1,8 +1,13 @@
 package com.example.wolframapitestapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.AttrRes;
+import android.support.annotation.ColorInt;
+import android.support.annotation.NonNull;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
@@ -15,6 +20,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -47,14 +53,15 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     private MathView mv_answer2;
     private MathView mv_answer3;
     private MathView mv_answer4;
+    private MathView mv_answer5;
 
     private Button help;
     private Button getQRCode;
     private Button solve;
     private Button mathly;
 
-    private int difficulty = -1;
-    private int category = -1;
+    private int difficulty  = -1;
+    private int category    = -1;
     private int subcategory = -1;
 
     private JSONObject jsonObject;
@@ -160,6 +167,27 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             if (super.onTouch(v, event)) {
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 3) {
+                        answer.setText("correct!");
+                        return true;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                answer.setText("incorrect!");
+                return true;
+            }
+            return false;
+        }
+    };
+
+    CheckForClickTouchLister answer5Listener = new CheckForClickTouchLister() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            if (super.onTouch(v, event)) {
+                try {
+                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 4) {
                         answer.setText("correct!");
                         return true;
                     }
@@ -293,8 +321,6 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         dialog.show();
     }
 
-
-
     @Override
     public void waEvaluateCompleted(String result) {
 
@@ -326,6 +352,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             mv_answer2.setText(choices[1]);
             mv_answer3.setText(choices[2]);
             mv_answer4.setText(choices[3]);
+            mv_answer5.setText(choices[4]);
         } catch (JSONException e) {
 
             e.printStackTrace();
@@ -345,22 +372,27 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         mv_answer1 = findViewById(R.id.mv_answer1);
         mv_answer1.setClickable(true);
         mv_answer1.setOnTouchListener(answer1Listener);
-        mv_answer1.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+        mv_answer1.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
 
         mv_answer2 = findViewById(R.id.mv_answer2);
         mv_answer2.setClickable(true);
         mv_answer2.setOnTouchListener(answer2Listener);
-        mv_answer2.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+        mv_answer2.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
 
         mv_answer3 = findViewById(R.id.mv_answer3);
         mv_answer3.setClickable(true);
         mv_answer3.setOnTouchListener(answer3Listener);
-        mv_answer3.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+        mv_answer3.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
 
         mv_answer4 = findViewById(R.id.mv_answer4);
         mv_answer4.setClickable(true);
         mv_answer4.setOnTouchListener(answer4Listener);
-        mv_answer4.setBackgroundColor(ContextCompat.getColor(getApplicationContext(),android.R.color.holo_blue_dark));
+        mv_answer4.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
+
+        mv_answer5 = findViewById(R.id.mv_answer5);
+        mv_answer5.setClickable(true);
+        mv_answer5.setOnTouchListener(answer5Listener);
+        mv_answer5.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
 
         help = findViewById(R.id.help);
         getQRCode = findViewById(R.id.getQRCode);
@@ -451,8 +483,8 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         actions.show();
     }
 
-    private void getWAImages()
-    {
+    private void getWAImages() {
+
         String temp = wa_fullQuery;
         int size = temp.length() - temp.replace("<img src='", "<imgsrc='").length();
         wa_images = new String[size];
@@ -466,8 +498,8 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         }
     }
 
-    private void getWAQ_A()
-    {
+    private void getWAQ_A() {
+
         String[] q_and_a = wa_fullQuery.split("plaintext>");
         int target = 0;
         for (int i = 0; i < q_and_a.length; i++) {
@@ -586,6 +618,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             }
         }
         return result;
+    }
+
+    @ColorInt
+    public static int getThemeColor(@NonNull final Context context, @AttrRes final int attributeColor) {
+
+        final TypedValue value = new TypedValue();
+        context.getTheme().resolveAttribute (attributeColor, value, true);
+        return value.data;
     }
 
     @Override
