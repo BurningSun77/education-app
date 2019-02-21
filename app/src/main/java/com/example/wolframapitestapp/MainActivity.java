@@ -3,10 +3,19 @@ package com.example.wolframapitestapp;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -26,7 +35,7 @@ import java.net.URLEncoder;
 import io.github.kexanie.library.MathView;
 
 
-public class MainActivity extends FragmentActivity implements WolframAPIFetch, MathlyAPIFetch {
+public class MainActivity extends AppCompatActivity implements WolframAPIFetch, MathlyAPIFetch, NavigationView.OnNavigationItemSelectedListener {
 
     private MathView mv_question;
     private TextView answer;
@@ -59,6 +68,8 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
     private String[] choices;
 
     private int helpToggle = 0;
+
+    private DrawerLayout drawer;
 
     DialogInterface.OnClickListener catagoryListener = new DialogInterface.OnClickListener() {
 
@@ -173,6 +184,56 @@ public class MainActivity extends FragmentActivity implements WolframAPIFetch, M
 
         setUpViews();
         selectCategory();
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        drawer = findViewById(R.id.drawer_layout);
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.help_button:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        new HelpFragment()).commit();
+                break;
+            //case R.id.nav_chat:
+            //    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+            //            new ChatFragment()).commit();
+            //    break;
+            //case R.id.nav_profile:
+            //    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+            //            new ProfileFragment()).commit();
+            //    break;
+            //case R.id.nav_share:
+            //    Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
+            //    break;
+            //case R.id.nav_send:
+            //    Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
+            //    break;
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 
     public void solveClick(View v) {
