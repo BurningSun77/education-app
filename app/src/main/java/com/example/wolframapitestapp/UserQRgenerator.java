@@ -122,7 +122,7 @@ public class UserQRgenerator extends AppCompatActivity {
 
 
 
-    private final String baseURL = "https://math.ly/api/v1/algebra/";
+    private final String baseURL = "https://math.ly/api/v1/";
    // private final String appID = "&appid=R3U29Q-EVL4795U7X";
     private final String[] difficulties = { "beginner", "intermediate", "advanced" };
     private final String[] categories = { "arithmetic", "algebra", "calculus"};
