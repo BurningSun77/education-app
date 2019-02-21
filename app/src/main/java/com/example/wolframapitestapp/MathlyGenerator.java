@@ -57,15 +57,20 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
         camerabutton.setOnClickListener(new View.OnClickListener() {
 
             public void onClick(View v){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (ContextCompat.checkSelfPermission(MathlyGenerator.this,
-                            Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                        // Toast.makeText(SimpleScannerActivity.this, "You have already granted this permission!",
-                        // Toast.LENGTH_SHORT).show();
-                    } else {
-                        requestStoragePermission();
-                    }
-                }
+
+                // camera code, uncomment before final build
+
+              // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+              //     if (ContextCompat.checkSelfPermission(MathlyGenerator.this,
+              //             Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+              //         // Toast.makeText(SimpleScannerActivity.this, "You have already granted this permission!",
+              //         // Toast.LENGTH_SHORT).show();
+              //         startActivity(new Intent(MathlyGenerator.this, SimpleScannerActivity.class));
+              //     } else {
+              //         requestStoragePermission();
+              //     }
+              // }
+                startActivity(new Intent(MathlyGenerator.this, UserQRgenerator.class));
 
 
 

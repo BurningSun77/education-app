@@ -3,7 +3,7 @@
     package="com.example.wolframapitestapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -16,7 +16,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <activity android:name=".SimpleScannerActivity"></activity>
+        <activity android:name=".UserQRgenerator"></activity>
+        <activity android:name=".SimpleScannerActivity" />
         <activity android:name=".MathlyGenerator">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.MAIN" />
