@@ -3,6 +3,34 @@
 
 
     <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/home_button"
+            android:icon="@drawable/ic_home_black_24dp"
+            android:title="home"
+            android:visible="true" />
+        <item
+            android:id="@+id/share_button"
+            android:icon="@drawable/ic_share_black_24dp"
+            android:title="Share"
+            android:visible="true" />
+        <item
+            android:id="@+id/catergory_button"
+            android:icon="@drawable/ic_school_black_24dp"
+            android:title="Categories"
+            android:visible="true" />
+        <item
+            android:id="@+id/scan_button"
+            android:icon="@drawable/ic_camera_black_24dp"
+            android:title="Scan"
+            android:visible="true" />
+        <item
+            android:id="@+id/about_button"
+            android:icon="@drawable/ic_library_books_black_24dp"
+            android:title="About us"
+            android:visible="true" />
+
+
         <item
             android:id="@+id/help_button"
             android:icon="@drawable/ic_help_black_24dp"
