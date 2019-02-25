@@ -1,4 +1,12 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
+
+import android.content.Context;
+import android.os.AsyncTask;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.net.URLEncoder;
 
 import com.wolfram.alpha.WAEngine;
 import com.wolfram.alpha.WAException;
@@ -8,15 +16,23 @@ import com.wolfram.alpha.WAQuery;
 import com.wolfram.alpha.WAQueryResult;
 import com.wolfram.alpha.WASubpod;
 
-public class WolframAPISample {
+public class WolframQuerier extends AsyncTask<String, Void, String> {
 
-    // PUT YOUR APPID HERE:
-    private static String appid = "R3U29Q-EVL4795U7X";
+    private String baseURL;
+    private String appID;
+    private WolframAPIFetch callback;
 
-    public void displayQueryResults(String input) {
+    public WolframQuerier(Context c) {
 
+        callback = (WolframAPIFetch) c;
+        baseURL = callback.getBaseURL();
+        appID = callback.getAppID();
+    }
+
+    public void getWAObject(String input)
+    {
         // Use "pi" as the default query, or caller can supply it as the lone command-line argument.
-        if (input == null) input = "pi";
+        input = "pi";
 
         // The WAEngine is a factory for creating WAQuery objects,
         // and it also used to perform those queries. You can set properties of
@@ -27,7 +43,7 @@ public class WolframAPISample {
         WAEngine engine = new WAEngine();
 
         // These properties will be set in all the WAQuery objects created from this WAEngine.
-        engine.setAppID(appid);
+        engine.setAppID("R3U29Q-EVL4795U7X");
         engine.addFormat("plaintext");
 
         // Create the query.
@@ -35,12 +51,13 @@ public class WolframAPISample {
 
         // Set properties of the query.
         query.setInput(input);
+
         try {
 
             // For educational purposes, print out the URL we are about to send:
             System.out.println("Query URL:");
             System.out.println(engine.toURL(query));
-            System.out.println("");
+            System.out.println();
 
             // This sends the URL to the Wolfram|Alpha server, gets the XML result
             // and parses it into an object hierarchy held by the WAQueryResult object.
@@ -59,12 +76,15 @@ public class WolframAPISample {
                 // Got a result.
                 System.out.println("Successful query. Pods follow:\n");
                 for (WAPod pod : queryResult.getPods()) {
+
                     if (!pod.isError()) {
 
                         System.out.println(pod.getTitle());
                         System.out.println("------------");
                         for (WASubpod subpod : pod.getSubpods()) {
+
                             for (Object element : subpod.getContents()) {
+
                                 if (element instanceof WAPlainText) {
 
                                     System.out.println(((WAPlainText) element).getText());
@@ -82,5 +102,37 @@ public class WolframAPISample {
 
             e.printStackTrace();
         }
+    }
+
+    protected String doInBackground(String... params) {
+
+        String output = "";
+        for (String query : params) {
+
+            try {
+
+                URL url = new URL(baseURL + URLEncoder.encode(query, "UTF-8") + appID);
+
+                BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+
+                String outLine;
+                while ((outLine = in.readLine()) != null) {
+
+                    output += outLine;
+                }
+
+                in.close();
+
+            } catch (Exception e) {
+
+                e.printStackTrace();
+            }
+        }
+        return output;
+    }
+
+    protected void onPostExecute(String result) {
+
+        callback.waEvaluateCompleted(result);
     }
 }

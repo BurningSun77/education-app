@@ -1,4 +1,4 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MathlyDemo extends AppCompatActivity {
+public class DemoActivity extends AppCompatActivity {
 
     private Button answer1;
     private Button answer2;
@@ -25,7 +25,7 @@ public class MathlyDemo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_demo);
 
-        final MathGenerator mathGenerator = new MathGenerator();
+        final RYOMathGenerator mathGenerator = new RYOMathGenerator();
 
 
         answer1 = findViewById(R.id.button3);
@@ -81,7 +81,7 @@ public class MathlyDemo extends AppCompatActivity {
     }
 
 
-    public void checkansewer(Button button,MathGenerator mathGenerator) {
+    public void checkansewer(Button button, RYOMathGenerator mathGenerator) {
 
         int choice = Integer.parseInt(button.getText().toString());
         if(choice == mathGenerator.getanswer()){

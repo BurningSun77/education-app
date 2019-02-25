@@ -1,4 +1,4 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
 
 import org.junit.Test;
 

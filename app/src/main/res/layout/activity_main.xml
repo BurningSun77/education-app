@@ -17,18 +17,6 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/answer"
-        android:layout_width="160dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="100dp"
-        android:text="@string/answer"
-        android:textAlignment="center"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/url"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
@@ -41,19 +29,6 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/solve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
-        android:onClick="solveClick"
-        android:text="@string/solve"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/getQRCode" />
-
-    <Button
         android:id="@+id/getQRCode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -62,8 +37,6 @@
         android:text="@string/get_qr_code"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/solve"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -80,16 +53,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@android:color/background_dark" />
-
-    <Button
-        android:id="@+id/mathly"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="mathlyClick"
-        android:text="@string/mathly"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/help"
@@ -127,17 +90,14 @@
         android:layout_height="70dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
+        app:engine="MathJax"
         app:layout_constraintBottom_toTopOf="@+id/mv_answer3"
         app:layout_constraintEnd_toStartOf="@+id/mv_answer2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/answer"
         app:layout_constraintVertical_chainStyle="packed"
-        app:engine="MathJax"
-        app:text="N/A"
-        >
-    </io.github.kexanie.library.MathView>
+        app:text="N/A"></io.github.kexanie.library.MathView>
 
     <io.github.kexanie.library.MathView
         android:id="@+id/mv_answer2"
@@ -147,16 +107,13 @@
         android:layout_height="70dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
+        app:engine="MathJax"
         app:layout_constraintBottom_toTopOf="@+id/mv_answer4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/mv_answer1"
-        app:layout_constraintTop_toBottomOf="@+id/answer"
         app:layout_constraintVertical_chainStyle="packed"
-        app:engine="MathJax"
-        app:text="N/A"
-        >
-    </io.github.kexanie.library.MathView>
+        app:text="N/A"></io.github.kexanie.library.MathView>
 
 
     <io.github.kexanie.library.MathView

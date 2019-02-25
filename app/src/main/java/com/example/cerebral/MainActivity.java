@@ -1,20 +1,14 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
 import android.support.annotation.NonNull;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -44,7 +38,6 @@ import io.github.kexanie.library.MathView;
 public class MainActivity extends AppCompatActivity implements WolframAPIFetch, MathlyAPIFetch, NavigationView.OnNavigationItemSelectedListener {
 
     private MathView mv_question;
-    private TextView answer;
     private TextView url;
     private ProgressBar progressCircle;
     private ImageView qrCode;
@@ -57,34 +50,31 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
     private Button help;
     private Button getQRCode;
-    private Button solve;
-    private Button mathly;
 
     private int difficulty  = -1;
     private int category    = -1;
     private int subcategory = -1;
 
     private JSONObject jsonObject;
+    private String ml_question;
+    private String[] choices;
 
     private String wa_fullQuery;
     private String wa_question;
-    private String ml_question;
     private String wa_answer;
     private String[] wa_images;
-
-    private String[] choices;
 
     private int helpToggle = 0;
 
     private DrawerLayout drawer;
 
-    DialogInterface.OnClickListener catagoryListener = new DialogInterface.OnClickListener() {
+    DialogInterface.OnClickListener categoryListener = new DialogInterface.OnClickListener() {
 
         @Override
         public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcategory(); }
     };
 
-    DialogInterface.OnClickListener subcatagoryListener = new DialogInterface.OnClickListener() {
+    DialogInterface.OnClickListener subcategoryListener = new DialogInterface.OnClickListener() {
 
         @Override
         public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty(); }
@@ -104,13 +94,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             if (super.onTouch(v, event)) {
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 0) {
-                        answer.setText("correct!");
+
+                        //increment winCount
                         return true;
                     }
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
-                answer.setText("incorrect!");
                 return true;
             }
             return false;
@@ -125,13 +116,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             if (super.onTouch(v, event)) {
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 1) {
-                        answer.setText("correct!");
+
+                        //increment winCount
                         return true;
                     }
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
-                answer.setText("incorrect!");
                 return true;
             }
             return false;
@@ -146,13 +138,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             if (super.onTouch(v, event)) {
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 2) {
-                        answer.setText("correct!");
+
+                        //increment winCount
                         return true;
                     }
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
-                answer.setText("incorrect!");
                 return true;
             }
             return false;
@@ -167,13 +160,13 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             if (super.onTouch(v, event)) {
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 3) {
-                        answer.setText("correct!");
+
+                        //increment winCount
                         return true;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                answer.setText("incorrect!");
                 return true;
             }
             return false;
@@ -188,13 +181,13 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             if (super.onTouch(v, event)) {
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 4) {
-                        answer.setText("correct!");
+
+                        //increment winCount
                         return true;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                answer.setText("incorrect!");
                 return true;
             }
             return false;
@@ -231,24 +224,25 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         switch (item.getItemId()) {
-            case R.id.help_button:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        new HelpFragment()).commit();
+
+            case R.id.home_button:
+                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
                 break;
-            //case R.id.nav_chat:
-            //    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-            //            new ChatFragment()).commit();
-            //    break;
-            //case R.id.nav_profile:
-            //    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-            //            new ProfileFragment()).commit();
-            //    break;
-            //case R.id.nav_share:
-            //    Toast.makeText(this, "Share", Toast.LENGTH_SHORT).show();
-            //    break;
-            //case R.id.nav_send:
-            //    Toast.makeText(this, "Send", Toast.LENGTH_SHORT).show();
-            //    break;
+            case R.id.share_button:
+                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                break;
+            case R.id.catergory_button:
+                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                break;
+            case R.id.scan_button:
+                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                break;
+            case R.id.about_button:
+                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                break;
+            case R.id.help_button:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HelpFragment()).commit();
+                break;
         }
 
         drawer.closeDrawer(GravityCompat.START);
@@ -257,18 +251,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
     @Override
     public void onBackPressed() {
+
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+
             drawer.closeDrawer(GravityCompat.START);
         } else {
+
             super.onBackPressed();
         }
-    }
-
-    public void solveClick(View v) {
-
-        String answerText = wa_question + " = " + wa_answer;
-        // answer.setText(answerText);
-        answer.setText(parseMathMLFull(ml_question));
     }
 
     public void getQRCodeClick(View v) {
@@ -277,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         mv_answer2.setVisibility(View.GONE);
         mv_answer3.setVisibility(View.GONE);
         mv_answer4.setVisibility(View.GONE);
+        mv_answer5.setVisibility(View.GONE);
 
         url.setVisibility(View.VISIBLE);
 
@@ -295,11 +286,6 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
             Picasso.get().load(qrapi_call).into(qrCode);
         }
-    }
-
-    public void mathlyClick(View v) {
-
-        startActivity(new Intent(MainActivity.this, MathlyGenerator.class));
     }
 
     public void helpClick(View v) {
@@ -330,8 +316,6 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         progressCircle.setVisibility(View.GONE);
         help.setVisibility(View.VISIBLE);
         getQRCode.setVisibility(View.VISIBLE);
-        solve.setVisibility(View.VISIBLE);
-        mathly.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -364,7 +348,6 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     private void setUpViews() {
 
         mv_question = findViewById(R.id.mv_question);
-        answer = findViewById(R.id.answer);
         url = findViewById(R.id.url);
         progressCircle = findViewById(R.id.progressCircle);
         qrCode = findViewById(R.id.qrCode);
@@ -396,8 +379,6 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
         help = findViewById(R.id.help);
         getQRCode = findViewById(R.id.getQRCode);
-        solve = findViewById(R.id.solve);
-        mathly = findViewById(R.id.mathly);
     }
 
     private void runAPIs() {
@@ -446,7 +427,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Select a Category");
-        builder.setItems(categories, catagoryListener);
+        builder.setItems(categories, categoryListener);
         builder.setNegativeButton("Cancel", null);
         AlertDialog actions = builder.create();
         actions.show();
@@ -459,13 +440,13 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         switch (category) {
 
             case 0:
-                builder.setItems(arithmetics, subcatagoryListener);
+                builder.setItems(arithmetics, subcategoryListener);
                 break;
             case 1:
-                builder.setItems(algebras, subcatagoryListener);
+                builder.setItems(algebras, subcategoryListener);
                 break;
             case 2:
-                builder.setItems(calculi, subcatagoryListener);
+                builder.setItems(calculi, subcategoryListener);
                 break;
         }
         builder.setNegativeButton("Cancel", null);

@@ -1,4 +1,4 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -23,14 +23,14 @@ public class MenuActivity extends AppCompatActivity {
 
     public void scanClick(View v) {
 
-        Intent intent = new Intent(this, SimpleScannerActivity.class);
+        Intent intent = new Intent(this, QRScannerActivity.class);
         startActivity(intent);
         finish();
     }
 
     public void generateClick(View v) {
 
-        Intent intent = new Intent(this, UserQRgenerator.class);
+        Intent intent = new Intent(this, QRGeneratorActivity.class);
         startActivity(intent);
         finish();
     }

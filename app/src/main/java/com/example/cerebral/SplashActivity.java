@@ -1,4 +1,4 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
 
 import android.content.Intent;
 import android.os.Bundle;

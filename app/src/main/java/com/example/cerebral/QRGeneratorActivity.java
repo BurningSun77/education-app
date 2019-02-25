@@ -1,4 +1,4 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
 
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
@@ -11,7 +11,7 @@ import com.squareup.picasso.Picasso;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-public class UserQRgenerator extends AppCompatActivity {
+public class QRGeneratorActivity extends AppCompatActivity {
 
     private int difficulty;
     private int category;
@@ -20,57 +20,58 @@ public class UserQRgenerator extends AppCompatActivity {
 
     private String userURL;
 
-    DialogInterface.OnClickListener catagoryListener = new DialogInterface.OnClickListener() {
+    DialogInterface.OnClickListener categoryListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcatagory();}
+        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcategory(); }
     };
 
-    DialogInterface.OnClickListener subcatagoryListener = new DialogInterface.OnClickListener() {
+    DialogInterface.OnClickListener subcategoryListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty();}
+        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty(); }
     };
 
     DialogInterface.OnClickListener difficultyListener = new DialogInterface.OnClickListener() {
 
         @Override
-        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; generateQRcode();}
+        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; generateQRcode(); }
     };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_qrgenerator);
+        setContentView(R.layout.activity_qr_generator);
         qrCode = findViewById(R.id.userqrcode);
 
-        selectCatagory();
+        selectCategory();
     }
 
 
-    private void selectCatagory() {
+    private void selectCategory() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Catagory");
-        builder.setItems(categories, catagoryListener);
+        builder.setTitle("Select a Category");
+        builder.setItems(categories, categoryListener);
         builder.setNegativeButton("Cancel", null);
         AlertDialog actions = builder.create();
         actions.show();
     }
 
-    private void selectSubcatagory() {
+    private void selectSubcategory() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Subcatagory");
+        builder.setTitle("Select a Subcategory");
         switch (category) {
 
             case 0:
-                builder.setItems(arithmetics, subcatagoryListener);
+                builder.setItems(arithmetics, subcategoryListener);
                 break;
             case 1:
-                builder.setItems(algebras, subcatagoryListener);
+                builder.setItems(algebras, subcategoryListener);
                 break;
             case 2:
-                builder.setItems(calculi, subcatagoryListener);
+                builder.setItems(calculi, subcategoryListener);
                 break;
         }
         builder.setNegativeButton("Cancel", null);
@@ -81,7 +82,7 @@ public class UserQRgenerator extends AppCompatActivity {
     private void selectDifficulty() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Dificulty");
+        builder.setTitle("Select a Difficulty");
         builder.setItems(difficulties, difficultyListener);
         builder.setNegativeButton("Cancel", null);
         AlertDialog actions = builder.create();
@@ -93,15 +94,15 @@ public class UserQRgenerator extends AppCompatActivity {
         switch (category) {
 
             case 0:
-                //builder.setItems(arithmetics, subcatagoryListener);
+                //builder.setItems(arithmetics, subcategoryListener);
                 userURL = baseURL + arithmeticsurl[subcategory]+".json"+"?difficulty=" +difficulties[difficulty];
                 break;
             case 1:
-                //builder.setItems(algebras, subcatagoryListener);
+                //builder.setItems(algebras, subcategoryListener);
                 userURL = baseURL + algebrasurl[subcategory]+".json"+"?difficulty=" +difficulties[difficulty];
                 break;
             case 2:
-                //builder.setItems(calculi, subcatagoryListener);
+                //builder.setItems(calculi, subcategoryListener);
                 userURL = baseURL + calculiurl[subcategory]+".json"+"?difficulty=" +difficulties[difficulty];
                 break;
         }
@@ -123,7 +124,7 @@ public class UserQRgenerator extends AppCompatActivity {
 
 
     private final String baseURL = "https://math.ly/api/v1/";
-   // private final String appID = "&appid=R3U29Q-EVL4795U7X";
+    // private final String appID = "&appid=R3U29Q-EVL4795U7X";
     private final String[] difficulties = { "beginner", "intermediate", "advanced" };
     private final String[] categories = { "arithmetic", "algebra", "calculus"};
     private final String[] arithmetics = {"Simple Arithmetic", "Fraction Arithmetic",

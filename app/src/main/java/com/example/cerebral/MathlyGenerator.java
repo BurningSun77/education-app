@@ -1,14 +1,10 @@
-package com.example.wolframapitestapp;
+package com.example.cerebral;
 
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.AsyncTask;
-import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,7 +24,7 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
     //private TextView choices;
     private  JSONObject jsonObject;
     private  MathView mathView;
-    private  MathGeneratorMark2 mathGeneratorMark2;
+    private JSONInterpreter mathGeneratorMark2;
     private Button[] choices = new Button[5];
     private Button camerabutton ;
     private int wincount;
@@ -63,14 +59,14 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
               // if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
               //     if (ContextCompat.checkSelfPermission(MathlyGenerator.this,
               //             Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-              //         // Toast.makeText(SimpleScannerActivity.this, "You have already granted this permission!",
+              //         // Toast.makeText(QRScannerActivity.this, "You have already granted this permission!",
               //         // Toast.LENGTH_SHORT).show();
-              //         startActivity(new Intent(MathlyGenerator.this, SimpleScannerActivity.class));
+              //         startActivity(new Intent(MathlyGenerator.this, QRScannerActivity.class));
               //     } else {
               //         requestStoragePermission();
               //     }
               // }
-                startActivity(new Intent(MathlyGenerator.this, UserQRgenerator.class));
+                startActivity(new Intent(MathlyGenerator.this, QRGeneratorActivity.class));
 
 
 
@@ -114,13 +110,13 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
 
        try {
            jsonObject = new JSONObject(result);
-           mathGeneratorMark2 = new MathGeneratorMark2(jsonObject);
+           mathGeneratorMark2 = new JSONInterpreter(jsonObject);
            mathView.setText(jsonObject.getString("question"));
            Intent getscore =getIntent();
 
            wincount= getscore.getIntExtra("score",0);
            displaycount.setText("Win Count: "+Integer.toString(wincount));
-           mathGeneratorMark2.setWincount(wincount);
+           mathGeneratorMark2.setWinCount(wincount);
            for(int i=0;i<choices.length;++i) {
 
                choices[i].setText(mathGeneratorMark2.getNumber(i));
@@ -149,10 +145,10 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
    }
 
 
-    public void checkansewer(int i, MathGeneratorMark2 mathGeneratorMark2) {
+    public void checkansewer(int i, JSONInterpreter mathGeneratorMark2) {
 
-        mathGeneratorMark2.checkanser(i);
-        wincount = mathGeneratorMark2.getWincount();
+        mathGeneratorMark2.checkAnswer(i);
+        wincount = mathGeneratorMark2.getWinCount();
         finish();
         Intent intent = getIntent();
         intent.putExtra("score",wincount);
@@ -183,7 +179,7 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
                             //thread = new Thread(MathlyGenerator.this);
 
 
-                            startActivity(new Intent(MathlyGenerator.this, SimpleScannerActivity.class));
+                            startActivity(new Intent(MathlyGenerator.this, QRScannerActivity.class));
 
 
                         }

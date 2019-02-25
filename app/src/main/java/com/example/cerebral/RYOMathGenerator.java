@@ -1,10 +1,8 @@
-package com.example.wolframapitestapp;
-
-import android.widget.Switch;
+package com.example.cerebral;
 
 import java.util.Random;
 
-public class MathGenerator {
+public class RYOMathGenerator {
 
     private enum operations{ add , subtract, multiple, divide }
 
@@ -29,7 +27,7 @@ public class MathGenerator {
     private boolean isseeded = false;
 
 
-    public  MathGenerator() {
+    public RYOMathGenerator() {
 
         random = new Random();
         //random.setSeed(theseed);
@@ -42,7 +40,7 @@ public class MathGenerator {
         problem();
     }
 
-    public  MathGenerator(long seed) {
+    public RYOMathGenerator(long seed) {
 
         random = new Random(seed);
         theotherseed = seed;
