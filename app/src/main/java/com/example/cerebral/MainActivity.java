@@ -2,6 +2,7 @@ package com.example.cerebral;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.AttrRes;
 import android.support.annotation.ColorInt;
@@ -65,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     private String[] wa_images;
 
     private int helpToggle = 0;
+    private int winCount   = 0;
 
     private DrawerLayout drawer;
 
@@ -95,13 +97,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 0) {
 
-                        //increment winCount
+                        winCount++;
                         return true;
                     }
                 } catch (JSONException e) {
 
                     e.printStackTrace();
                 }
+                runAPIs();
                 return true;
             }
             return false;
@@ -117,13 +120,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 1) {
 
-                        //increment winCount
+                        winCount++;
                         return true;
                     }
                 } catch (JSONException e) {
 
                     e.printStackTrace();
                 }
+                runAPIs();
                 return true;
             }
             return false;
@@ -139,13 +143,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 2) {
 
-                        //increment winCount
+                        winCount++;
                         return true;
                     }
                 } catch (JSONException e) {
 
                     e.printStackTrace();
                 }
+                runAPIs();
                 return true;
             }
             return false;
@@ -161,12 +166,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 3) {
 
-                        //increment winCount
+                        winCount++;
                         return true;
                     }
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
+                runAPIs();
                 return true;
             }
             return false;
@@ -182,12 +189,14 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                 try {
                     if (Integer.parseInt(jsonObject.getString("correct_choice")) == 4) {
 
-                        //increment winCount
+                        winCount++;
                         return true;
                     }
                 } catch (JSONException e) {
+
                     e.printStackTrace();
                 }
+                runAPIs();
                 return true;
             }
             return false;
@@ -199,9 +208,6 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Intent intent = getIntent();
-        // Uri data = intent.getData();
 
         setUpViews();
         selectCategory();
@@ -223,25 +229,39 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
+        Intent intent;
+
         switch (item.getItemId()) {
 
             case R.id.home_button:
-                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                intent = new Intent(this, MenuActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.share_button:
-                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                intent = new Intent(this, QRGeneratorActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.catergory_button:
-                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.scan_button:
-                // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
+                intent = new Intent(this, QRScannerActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.about_button:
                 // getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TODOFragment()).commit();
                 break;
             case R.id.help_button:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HelpFragment()).commit();
+                Bundle bundle = new Bundle();
+                bundle.putStringArray("wa_images", wa_images);
+                HelpFragment helpFragment = new HelpFragment();
+                helpFragment.setArguments(bundle);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, helpFragment).commit();
                 break;
         }
 

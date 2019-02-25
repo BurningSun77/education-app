@@ -20,19 +20,21 @@
         android:id="@+id/url"
         android:layout_width="wrap_content"
         android:layout_height="36dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="96dp"
         android:text="@string/url"
         android:textAlignment="center"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/getQRCode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_width="72dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="16dp"
         android:onClick="getQRCodeClick"
         android:text="@string/get_qr_code"
         android:visibility="gone"
@@ -56,12 +58,14 @@
 
     <Button
         android:id="@+id/help"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="68dp"
+        android:layout_height="36dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         android:onClick="helpClick"
         android:text="@string/help"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <io.github.kexanie.library.MathView
@@ -73,14 +77,12 @@
         android:layout_marginTop="40dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
+        app:engine="MathJax"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:engine="MathJax"
-        app:text="N/A"
-        >
-    </io.github.kexanie.library.MathView>
+        app:text="N/A"></io.github.kexanie.library.MathView>
 
     <io.github.kexanie.library.MathView
         android:id="@+id/mv_answer1"
@@ -88,15 +90,15 @@
         id="@+id/view1"
         android:layout_width="120dp"
         android:layout_height="70dp"
+        android:layout_marginTop="124dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         app:engine="MathJax"
-        app:layout_constraintBottom_toTopOf="@+id/mv_answer3"
         app:layout_constraintEnd_toStartOf="@+id/mv_answer2"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
         app:text="N/A"></io.github.kexanie.library.MathView>
 
     <io.github.kexanie.library.MathView
@@ -105,16 +107,15 @@
         id="@+id/view2"
         android:layout_width="120dp"
         android:layout_height="70dp"
+        android:layout_marginTop="124dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
         app:engine="MathJax"
-        app:layout_constraintBottom_toTopOf="@+id/mv_answer4"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/mv_answer1"
-        app:layout_constraintVertical_chainStyle="packed"
+        app:layout_constraintTop_toTopOf="parent"
         app:text="N/A"></io.github.kexanie.library.MathView>
-
 
     <io.github.kexanie.library.MathView
         android:id="@+id/mv_answer3"
@@ -122,18 +123,16 @@
         id="@+id/view3"
         android:layout_width="120dp"
         android:layout_height="70dp"
+        android:layout_marginTop="196dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/url"
+        app:engine="MathJax"
         app:layout_constraintEnd_toStartOf="@+id/mv_answer4"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mv_answer1"
-        app:engine="MathJax"
-        app:text="N/A"
-        >
-    </io.github.kexanie.library.MathView>
+        app:layout_constraintTop_toTopOf="parent"
+        app:text="N/A"></io.github.kexanie.library.MathView>
 
     <io.github.kexanie.library.MathView
         android:id="@+id/mv_answer4"
@@ -141,17 +140,15 @@
         id="@+id/view4"
         android:layout_width="120dp"
         android:layout_height="70dp"
+        android:layout_marginTop="196dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toTopOf="@+id/url"
+        app:engine="MathJax"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/mv_answer3"
-        app:layout_constraintTop_toBottomOf="@+id/mv_answer2"
-        app:engine="MathJax"
-        app:text="N/A"
-        >
-    </io.github.kexanie.library.MathView>
+        app:layout_constraintTop_toTopOf="parent"
+        app:text="N/A"></io.github.kexanie.library.MathView>
 
     <io.github.kexanie.library.MathView
         android:id="@+id/mv_answer5"
@@ -159,20 +156,15 @@
         id="@+id/view5"
         android:layout_width="120dp"
         android:layout_height="70dp"
-        android:layout_marginTop="448dp"
-        android:layout_marginBottom="213dp"
+        android:layout_marginTop="264dp"
         android:textAlignment="center"
         android:textColor="@android:color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:engine="MathJax"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:engine="MathJax"
-        app:text="N/A"
-    >
-    </io.github.kexanie.library.MathView>
-
+        app:text="N/A"></io.github.kexanie.library.MathView>
 
     <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -196,6 +188,7 @@
                 android:background="@color/colorPrimary"
                 android:elevation="4dp"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                android:visibility="gone"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
             <FrameLayout

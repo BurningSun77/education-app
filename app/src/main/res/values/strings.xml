@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Wolframapitestapp</string>
+    <string name="app_name">Cerebral</string>
     <string name="search_api">Search API</string>
     <string name="result">resultapi</string>
     <string name="question">32 * 6</string>
     <string name="answer">answer</string>
     <string name="url">url</string>
-    <string name="get_qr_code">Get QR Code</string>
+    <string name="get_qr_code">Share</string>
     <string name="qr_code">QR Code</string>
     <string name="solve">Solve</string>
     <string name="answer1">Answer 1</string>
