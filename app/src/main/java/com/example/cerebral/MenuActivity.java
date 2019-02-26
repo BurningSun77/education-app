@@ -16,7 +16,7 @@ public class MenuActivity extends AppCompatActivity {
 
     public void selectClick(View v) {
 
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, catagorychoices.class);
         startActivity(intent);
         finish();
     }

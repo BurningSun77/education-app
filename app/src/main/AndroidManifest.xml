@@ -16,9 +16,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
-        <activity android:name="com.example.cerebral.SplashActivity" android:theme="@style/SplashTheme">
+        <activity
+            android:name=".catagorychoices"
+            android:label="@string/title_activity_catagorychoices"
+            android:theme="@style/NoActionBar"></activity>
+        <activity
+            android:name=".SplashActivity"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
 
                 <data
@@ -28,31 +35,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
-
             </intent-filter>
-
         </activity>
-        <activity android:name="com.example.cerebral.MenuActivity">
-
+        <activity android:name=".MenuActivity">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-
         </activity>
-        <activity android:name="com.example.cerebral.MainActivity">
-
+        <activity android:name=".MainActivity">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
-
         </activity>
-        <activity android:name="com.example.cerebral.QRGeneratorActivity">
-
-        </activity>
-        <activity android:name="com.example.cerebral.QRScannerActivity" />
-
-        <activity android:name="com.example.cerebral.MathlyGenerator">
-
+        <activity android:name=".QRGeneratorActivity"></activity>
+        <activity android:name=".QRScannerActivity" />
+        <activity android:name=".MathlyGenerator">
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
@@ -65,9 +62,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
-
         </activity>
-        <activity android:name="com.example.cerebral.DemoActivity" />
+        <activity android:name=".DemoActivity" />
     </application>
 
 </manifest>

@@ -91,7 +91,7 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
         //     e.printStackTrace();
         // }
         Intent geturi= getIntent();
-        uri= geturi.getStringExtra("uri");
+        uri= geturi.getStringExtra("url");
         if (uri==null){
             uri=         "https://math.ly/api/v1/algebra/linear-equations.json";
         }
@@ -130,13 +130,6 @@ public class MathlyGenerator extends AppCompatActivity implements MathlyAPIFetch
                });
            }
 
-
-         // equation.setText(mathGeneratorMark2);
-           //JSONArray jsonArray = jsonObject.getJSONArray("choices");
-           // int answer = Integer.parseInt( jsonObject.getString("correct_choice"));
-          //JSONArray jsonArray = jsonObject.getJSONArray("choices");
-          //equation.setText(jsonObject.getString("question"));
-          //choices.setText(jsonArray.toString());
 
        } catch (JSONException e) {
 

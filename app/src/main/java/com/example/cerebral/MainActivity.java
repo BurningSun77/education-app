@@ -38,23 +38,23 @@ import io.github.kexanie.library.MathView;
 
 public class MainActivity extends AppCompatActivity implements WolframAPIFetch, MathlyAPIFetch, NavigationView.OnNavigationItemSelectedListener {
 
-    private MathView mv_question;
+    private TextView mv_question;
     private TextView url;
     private ProgressBar progressCircle;
     private ImageView qrCode;
 
-    private MathView mv_answer1;
-    private MathView mv_answer2;
-    private MathView mv_answer3;
-    private MathView mv_answer4;
-    private MathView mv_answer5;
 
-    private Button help;
+    private Button[] userchoices = new Button[5];
+    private JSONInterpreter mathlygenerator;
+
+
+    //private Button help;
     private Button getQRCode;
 
     private int difficulty  = -1;
     private int category    = -1;
     private int subcategory = -1;
+    private int wincount;
 
     private JSONObject jsonObject;
     private String ml_question;
@@ -65,143 +65,16 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     private String wa_answer;
     private String[] wa_images;
 
+    private TextView displaycount;
+
     private int helpToggle = 0;
     private int winCount   = 0;
 
     private DrawerLayout drawer;
 
-    DialogInterface.OnClickListener categoryListener = new DialogInterface.OnClickListener() {
 
-        @Override
-        public void onClick(DialogInterface dialog, int selection) { category = selection; selectSubcategory(); }
-    };
 
-    DialogInterface.OnClickListener subcategoryListener = new DialogInterface.OnClickListener() {
 
-        @Override
-        public void onClick(DialogInterface dialog, int selection) { subcategory = selection; selectDifficulty(); }
-    };
-
-    DialogInterface.OnClickListener difficultyListener = new DialogInterface.OnClickListener() {
-
-        @Override
-        public void onClick(DialogInterface dialog, int selection) { difficulty = selection; runAPIs(); }
-    };
-
-    CheckForClickTouchLister answer1Listener = new CheckForClickTouchLister() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (super.onTouch(v, event)) {
-                try {
-                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 0) {
-
-                        winCount++;
-                        return true;
-                    }
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-                runAPIs();
-                return true;
-            }
-            return false;
-        }
-    };
-
-    CheckForClickTouchLister answer2Listener = new CheckForClickTouchLister() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (super.onTouch(v, event)) {
-                try {
-                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 1) {
-
-                        winCount++;
-                        return true;
-                    }
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-                runAPIs();
-                return true;
-            }
-            return false;
-        }
-    };
-
-    CheckForClickTouchLister answer3Listener = new CheckForClickTouchLister() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (super.onTouch(v, event)) {
-                try {
-                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 2) {
-
-                        winCount++;
-                        return true;
-                    }
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-                runAPIs();
-                return true;
-            }
-            return false;
-        }
-    };
-
-    CheckForClickTouchLister answer4Listener = new CheckForClickTouchLister() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (super.onTouch(v, event)) {
-                try {
-                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 3) {
-
-                        winCount++;
-                        return true;
-                    }
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-                runAPIs();
-                return true;
-            }
-            return false;
-        }
-    };
-
-    CheckForClickTouchLister answer5Listener = new CheckForClickTouchLister() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (super.onTouch(v, event)) {
-                try {
-                    if (Integer.parseInt(jsonObject.getString("correct_choice")) == 4) {
-
-                        winCount++;
-                        return true;
-                    }
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                }
-                runAPIs();
-                return true;
-            }
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -210,12 +83,15 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         setContentView(R.layout.activity_main);
 
         setUpViews();
-        selectCategory();
+        runAPIs();
 
+        Intent getScore = getIntent();
+
+        winCount = getScore.getIntExtra("score",0);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+        displaycount = findViewById(R.id.viewscore);
         drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -244,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                 finish();
                 break;
             case R.id.catergory_button:
-                intent = new Intent(this, MainActivity.class);
+                intent = new Intent(this, catagorychoices.class);
                 startActivity(intent);
                 finish();
                 break;
@@ -283,18 +159,19 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
     public void getQRCodeClick(View v) {
 
-        mv_answer1.setVisibility(View.GONE);
-        mv_answer2.setVisibility(View.GONE);
-        mv_answer3.setVisibility(View.GONE);
-        mv_answer4.setVisibility(View.GONE);
-        mv_answer5.setVisibility(View.GONE);
+
+        for(int i=0;i<userchoices.length;++i) {
+            userchoices[i].setVisibility(View.GONE);
+
+        }
+
 
         url.setVisibility(View.VISIBLE);
 
         String qrapi_call = null;
         try {
 
-            qrapi_call = baseURL + URLEncoder.encode(parseMathML(mv_question.getText()), "UTF-8") + appID;
+            qrapi_call = baseURL + URLEncoder.encode(parseMathML(ml_question), "UTF-8") + appID;
             url.setText(qrapi_call);
             qrapi_call = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(url.getText().toString(), "UTF-8") + "&size=250x250";
         } catch (UnsupportedEncodingException e) {
@@ -334,29 +211,39 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         getWAImages();
         getWAQ_A();
         progressCircle.setVisibility(View.GONE);
-        help.setVisibility(View.VISIBLE);
+       //help.setVisibility(View.VISIBLE);
         getQRCode.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void mathlyEvaluateCompleted(String result) {
 
+
+
         try {
-
             jsonObject = new JSONObject(result);
-            JSONArray jsonArray = jsonObject.getJSONArray("choices");
-            choices = new String[jsonArray.length()];
-            for (int i = 0; i < choices.length; i++) {
-
-                choices[i] = jsonArray.optString(i);
-            }
-            ml_question = jsonObject.getString("question");
+            mathlygenerator = new JSONInterpreter(jsonObject);
+            ml_question=parseMathMLFull(jsonObject.getString("question"));
             mv_question.setText(ml_question);
-            mv_answer1.setText(choices[0]);
-            mv_answer2.setText(choices[1]);
-            mv_answer3.setText(choices[2]);
-            mv_answer4.setText(choices[3]);
-            mv_answer5.setText(choices[4]);
+            Intent getscore =getIntent();
+
+            wincount= getscore.getIntExtra("score",0);
+            displaycount.setText("Win Count: "+Integer.toString(wincount));
+            mathlygenerator.setWinCount(wincount);
+            for(int i=0;i<userchoices.length;++i) {
+
+                userchoices[i].setText(mathlygenerator.getNumber(i));
+                final int finalI = i;
+                userchoices[i].setOnClickListener(new View.OnClickListener() {
+
+                    public void onClick(View v) {
+
+                        checkansewer(finalI,mathlygenerator);
+                    }
+                });
+            }
+
+
         } catch (JSONException e) {
 
             e.printStackTrace();
@@ -372,117 +259,46 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         progressCircle = findViewById(R.id.progressCircle);
         qrCode = findViewById(R.id.qrCode);
 
-        mv_answer1 = findViewById(R.id.mv_answer1);
-        mv_answer1.setClickable(true);
-        mv_answer1.setOnTouchListener(answer1Listener);
-        mv_answer1.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
+        userchoices[0] = findViewById(R.id.mv_answer1);
+        userchoices[1] = findViewById(R.id.mv_answer2);
+        userchoices[2] = findViewById(R.id.mv_answer3);
+        userchoices[3] = findViewById(R.id.mv_answer4);
+        userchoices[4] = findViewById(R.id.mv_answer5);
 
-        mv_answer2 = findViewById(R.id.mv_answer2);
-        mv_answer2.setClickable(true);
-        mv_answer2.setOnTouchListener(answer2Listener);
-        mv_answer2.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
+        for(int i=0;i<userchoices.length;++i) {
+            userchoices[i].setClickable(true);
+            userchoices[i].setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
 
-        mv_answer3 = findViewById(R.id.mv_answer3);
-        mv_answer3.setClickable(true);
-        mv_answer3.setOnTouchListener(answer3Listener);
-        mv_answer3.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
+        }
 
-        mv_answer4 = findViewById(R.id.mv_answer4);
-        mv_answer4.setClickable(true);
-        mv_answer4.setOnTouchListener(answer4Listener);
-        mv_answer4.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
 
-        mv_answer5 = findViewById(R.id.mv_answer5);
-        mv_answer5.setClickable(true);
-        mv_answer5.setOnTouchListener(answer5Listener);
-        mv_answer5.setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
-
-        help = findViewById(R.id.help);
+        //help = findViewById(R.id.help);
         getQRCode = findViewById(R.id.getQRCode);
     }
 
     private void runAPIs() {
+//throw url from intent here
+        Intent geturl = getIntent();
+        String qurl=geturl.getStringExtra("url");
 
-        new MathlyQuerier(this).execute(getMathlyURL());
+        new MathlyQuerier(this).execute( qurl);
         progressCircle.setVisibility(View.VISIBLE);
     }
 
-    private String getMathlyURL() {
 
-        String url = "https://math.ly/api/v1/";
-        if (category >= 0) {
-            if (categories[category] != null) {
 
-                url = url + categories[category].replace(' ', '-') + "/";
-                switch (category) {
+    public void checkansewer(int i, JSONInterpreter mathGeneratorMark2) {
 
-                    case 0:
-                        url = url + arithmetics[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
-                        break;
-                    case 1:
-                        url = url + algebras[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
-                        break;
-                    case 2:
-                        url = url + calculi[subcategory >= 0 ? subcategory : 0].replace(' ', '-') + ".json";
-                        break;
-                }
-            } else {
-
-                url += "arithmetic/simple-arithmetic.json";
-            }
-        }
-        if (difficulty >= 0 && subcategory < 2) {
-
-            url = (url + "?difficulty=" + difficulties[difficulty]);
-        }
-
-        url = url.toLowerCase();
-
-        Log.d("Fetching from Math.ly", url);
-
-        return url;
+        mathGeneratorMark2.checkAnswer(i);
+        wincount = mathGeneratorMark2.getWinCount();
+        finish();
+        Intent intent = getIntent();
+        intent.putExtra("score",wincount);
+        startActivity(getIntent());
     }
 
-    private void selectCategory() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Category");
-        builder.setItems(categories, categoryListener);
-        builder.setNegativeButton("Cancel", null);
-        AlertDialog actions = builder.create();
-        actions.show();
-    }
 
-    private void selectSubcategory() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Subcategory");
-        switch (category) {
-
-            case 0:
-                builder.setItems(arithmetics, subcategoryListener);
-                break;
-            case 1:
-                builder.setItems(algebras, subcategoryListener);
-                break;
-            case 2:
-                builder.setItems(calculi, subcategoryListener);
-                break;
-        }
-        builder.setNegativeButton("Cancel", null);
-        AlertDialog actions = builder.create();
-        actions.show();
-    }
-
-    private void selectDifficulty() {
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Select a Dificulty");
-        builder.setItems(difficulties, difficultyListener);
-        builder.setNegativeButton("Cancel", null);
-        AlertDialog actions = builder.create();
-        actions.show();
-    }
 
     private void getWAImages() {
 
@@ -607,6 +423,8 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                             case "&#xF7;":
                                 result += "÷";
                                 break;
+                            case "&DifferentialD;":
+                                result += "dx/dy";
                             default:
                                 result += m.substring(0, m.indexOf("<"));
                                 break;
@@ -615,6 +433,9 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
                         result += m.substring(0, m.indexOf("<"));
                     }
+                    break;
+                case "/math":
+                    result += m.substring(0, m.indexOf("<"));
                     break;
             }
         }
@@ -643,17 +464,5 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
     private final String baseURL = "http://api.wolframalpha.com/v2/query?input=";
     private final String appID = "&appid=R3U29Q-EVL4795U7X";
-    private final String[] difficulties = { "Beginner", "Intermediate", "Advanced" };
-    private final String[] categories = { "Arithmetic", "Algebra", "Calculus"};
-    private final String[] arithmetics = {"Simple", "Fractions",
-            "Exponents and Radicals", "Simple Trigonometry", "Matrices" };
-    private final String[] algebras = { "Linear Equations", "Equations Containing Radicals",
-            "Equations Containing Absolute Values", "Quadratic Equations",
-            "Higher Order Polynomial Equations", "Equations Involving Fractions",
-            "Exponential Equations", "Logarithmic Equations", "Trigonometric Equations",
-            "Matrices Equations" };
-    private final String[] calculi = { "Polynomial Differentiation", "Trigonometric Differentiation",
-            "Exponents Differentiation", "Polynomial Integration", "Trigonometric Integration",
-            "Exponents Integration", "Polynomial Definite Integrals", "Trigonometric Definite Integrals",
-            "Exponents Definite Integrals", "First Order Differential Equations", "Second Order Differential Equations"};
+
 }

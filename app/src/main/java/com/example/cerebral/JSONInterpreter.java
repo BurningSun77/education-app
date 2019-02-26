@@ -24,7 +24,7 @@ public class JSONInterpreter {
             JSONArray jsonArray = jsonObject.getJSONArray("choices");
             for(int i=0;i<jsonArray.length();++i) {
 
-                numbers[i] = parseXML(jsonArray.getString(i));
+                numbers[i] = parseMathMLFull(jsonArray.getString(i));
             }
             problemID = jsonObject.getString("id");
             difficulty = jsonObject.getString("difficulty");
@@ -57,6 +57,102 @@ public class JSONInterpreter {
         return result;
     }
 
+    private String parseMathMLFull(@org.jetbrains.annotations.NotNull String m) {
+
+        String result = "";
+        while (m.contains("<")) {
+
+            m = m.substring(m.indexOf("<") + 1);
+            String tag = m.substring(0, m.indexOf(">"));
+            String root;
+            String temp;
+
+            m = m.replace("<mrow>", "").replace("</mrow>", "");
+
+            m = m.substring(m.indexOf(">") + 1);
+            switch (tag) {
+
+                case "msqrt":
+                    result += "sqrt(";
+                    break;
+                case "\\/msqrt":
+                    result += ")";
+                    break;
+                case "mroot":
+                    root = m.substring(0, m.indexOf("/mroot"));
+                    temp = "";
+                    while (root.contains(">")) {
+
+                        root = root.substring(root.indexOf(">") + 1);
+                        if (!root.contains("<")) break;
+                        if (temp.length() == 0) {
+
+                            temp = root.substring(0, root.indexOf("<"));
+                        } else {
+
+                            root = root.substring(root.indexOf(">") + 1);
+                            temp = root.substring(0, root.indexOf("<")) + "root(" + temp + ")";
+                            break;
+                        }
+                        root = root.substring(root.indexOf("<"));
+                    }
+                    result += temp;
+                    break;
+                case "mfrac":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += "(" + m.substring(0, m.indexOf("<")) + " / ";
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<")) + ")";
+                    break;
+                case "msup":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += "(" + m.substring(0, m.indexOf("<")) + "^";
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<")) + ")";
+                    break;
+                case "msub":
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<"));
+                    m = m.substring(m.indexOf(">") + 1);
+                    m = m.substring(m.indexOf(">") + 1);
+                    result += m.substring(0, m.indexOf("<"));
+                    break;
+                case "mi":
+                case "mn":
+                    result += m.substring(0, m.indexOf("<")) + " ";
+                    break;
+                case "mo":
+                    if (m.substring(1, 2).equals("&")) {
+
+                        switch (m.substring(1, m.indexOf("<") - 1)) {
+
+                            case "&Cross;":
+                                result += "×";
+                                break;
+                            case "&#xF7;":
+                                result += "÷";
+                                break;
+                            case "&DifferentialD;":
+                                result += "dx/dy";
+                            default:
+                                result += m.substring(0, m.indexOf("<"));
+                                break;
+                        }
+                    } else {
+
+                        result += m.substring(0, m.indexOf("<"));
+                    }
+                    break;
+                case "/math":
+                    if(m.contains("<"))
+                    result += m.substring(0, m.indexOf("<"));
+                    break;
+            }
+        }
+        return result;
+    }
 
 
     //public JSONInterpreter(JSONArray choices,String ID, int correctNumber){

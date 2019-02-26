@@ -50,8 +50,8 @@ public class QRScannerActivity extends AppCompatActivity implements ZXingScanner
         // Do something with the result here
         //Log.v(TAG, rawResult.getText()); // Prints scan results
         // Log.v(TAG, rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-        Intent intentback = new Intent(QRScannerActivity.this, MathlyGenerator.class);
-        intentback.putExtra("uri",rawResult.getText());
+        Intent intentback = new Intent(QRScannerActivity.this, MainActivity.class);
+        intentback.putExtra("url",rawResult.getText());
 
         startActivity(intentback);
         // If you would like to resume scanning, call this method below:
