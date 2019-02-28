@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
 
-public class CategoryFragment extends Fragment {
+public class SubcategoryFragment extends Fragment {
 
     String category;
 
