@@ -5,6 +5,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
@@ -16,6 +17,7 @@ public class QRGeneratorActivity extends AppCompatActivity {
     private int difficulty;
     private int category;
     private int subcategory;
+    private TextView url;
     private ImageView qrCode;
 
     private String userURL;
@@ -42,7 +44,9 @@ public class QRGeneratorActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qr_generator);
+
         qrCode = findViewById(R.id.userqrcode);
+        url = findViewById(R.id.url);
 
         selectCategory();
     }
@@ -107,16 +111,19 @@ public class QRGeneratorActivity extends AppCompatActivity {
                 break;
         }
 
-        String QRurl = null;
+        String qrUrl = null;
         try {
-            QRurl = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(userURL, "UTF-8") + "&size=250x250";
+
+            qrUrl = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(userURL, "UTF-8") + "&size=250x250";
         } catch (UnsupportedEncodingException e) {
+
             e.printStackTrace();
         }
 
-        if (QRurl != null) {
+        if (qrUrl != null) {
 
-            Picasso.get().load(QRurl).into(qrCode);
+            Picasso.get().load(qrUrl).into(qrCode);
+            url.setText(userURL);
         }
     };
 
