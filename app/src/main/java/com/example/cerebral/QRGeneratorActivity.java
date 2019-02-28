@@ -1,6 +1,7 @@
 package com.example.cerebral;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -48,7 +49,15 @@ public class QRGeneratorActivity extends AppCompatActivity {
         qrCode = findViewById(R.id.userqrcode);
         url = findViewById(R.id.url);
 
-        selectCategory();
+        Intent getUrl = getIntent();
+        String query = getUrl.getStringExtra("url");
+
+        if(query==null){
+        selectCategory();}
+        else{
+            userURL = query;
+            generateQRcode(userURL);
+        }
     }
 
 
@@ -125,10 +134,37 @@ public class QRGeneratorActivity extends AppCompatActivity {
             Picasso.get().load(qrUrl).into(qrCode);
             url.setText(userURL);
         }
-    };
+    }
 
 
+    private void generateQRcode(String userURL){
 
+        String qrUrl = null;
+        try {
+
+            qrUrl = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(userURL, "UTF-8") + "&size=250x250";
+        } catch (UnsupportedEncodingException e) {
+
+            e.printStackTrace();
+        }
+
+        if (qrUrl != null) {
+
+            Picasso.get().load(qrUrl).into(qrCode);
+            url.setText(userURL);
+        }
+
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(QRGeneratorActivity.this, MainActivity.class);
+        intent.putExtra("url", userURL);
+
+        startActivity(intent);
+    }
 
     private final String baseURL = "https://math.ly/api/v1/";
     // private final String appID = "&appid=R3U29Q-EVL4795U7X";

@@ -249,28 +249,39 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     public void getQRCodeClick(View v) {
 
 
-        for (int i = 0; i< userChoices.length; ++i) {
+      //for (int i = 0; i< userChoices.length; ++i) {
 
-            userChoices[i].setVisibility(View.GONE);
-        }
+      //    userChoices[i].setVisibility(View.GONE);
+      //}
 
-        url.setVisibility(View.VISIBLE);
+      //url.setVisibility(View.VISIBLE);
 
-        String qrapi_call = null;
-        try {
+      //String qrapi_call = null;
+      //try {
 
-            qrapi_call = baseURL + URLEncoder.encode(parseMathML(ml_question), "UTF-8") + appID;
-            url.setText(qrapi_call);
-            qrapi_call = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(url.getText().toString(), "UTF-8") + "&size=250x250";
-        } catch (UnsupportedEncodingException e) {
+      //    qrapi_call = baseURL + URLEncoder.encode(parseMathML(ml_question), "UTF-8") + appID;
+      //    url.setText(qrapi_call);
+      //    qrapi_call = "http://api.qrserver.com/v1/create-qr-code/?data=" + URLEncoder.encode(url.getText().toString(), "UTF-8") + "&size=250x250";
+      //} catch (UnsupportedEncodingException e) {
 
-            e.printStackTrace();
-        }
+      //    e.printStackTrace();
+      //}
 
-        if (qrapi_call != null) {
+      //if (qrapi_call != null) {
 
-            Picasso.get().load(qrapi_call).into(qrCode);
-        }
+      //    Picasso.get().load(qrapi_call).into(qrCode);
+
+
+      //}
+
+        Intent intent = new Intent(this, QRGeneratorActivity.class);
+
+        Intent getUrl = getIntent();
+        String query = getUrl.getStringExtra("url");
+        intent.putExtra("url",query);
+        startActivity(intent);
+        finish();
+
     }
 
     public void checkAnswer(int i, JSONInterpreter jsonInterpreter) {
