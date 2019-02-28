@@ -17,8 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity
-            android:name=".catagorychoices"
-            android:label="@string/title_activity_catagorychoices"
+            android:name=".CategoriesActivity"
+            android:label="@string/title_activity_CategoryChoices"
             android:theme="@style/NoActionBar"></activity>
         <activity
             android:name=".SplashActivity"

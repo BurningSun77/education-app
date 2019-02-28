@@ -160,12 +160,10 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
                 finish();
                 break;
             case R.id.share_button:
-                intent = new Intent(this, QRGeneratorActivity.class);
-                startActivity(intent);
-                finish();
+                getQRCodeClick(share);
                 break;
             case R.id.catergory_button:
-                intent = new Intent(this, catagorychoices.class);
+                intent = new Intent(this, CategoriesActivity.class);
                 startActivity(intent);
                 finish();
                 break;

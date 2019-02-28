@@ -3,15 +3,12 @@ package com.example.cerebral;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
 
-public class catagorychoices extends AppCompatActivity {
+public class CategoriesActivity extends AppCompatActivity {
 
     private int difficulty  = -1;
     private int category    = -1;
@@ -37,7 +34,7 @@ public class catagorychoices extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_catagorychoices);
+        setContentView(R.layout.activity_catagories);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -133,11 +130,11 @@ public class catagorychoices extends AppCompatActivity {
 
     public void onBackPressed() {
 
-     startActivity (new Intent(catagorychoices.this, MenuActivity.class));
+     startActivity (new Intent(CategoriesActivity.this, MenuActivity.class));
     }
     private void sendtomainactivity(){
 
-        Intent intent = new Intent(catagorychoices.this, MainActivity.class);
+        Intent intent = new Intent(CategoriesActivity.this, MainActivity.class);
         intent.putExtra("url", getMathlyURL());
 
         startActivity(intent);
