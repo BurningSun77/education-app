@@ -32,7 +32,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 
-public class MainActivity extends AppCompatActivity implements WolframAPIFetch, MathlyAPIFetch, NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements WolframAPIFetch, MathlyAPIFetch, NavigationView.OnNavigationItemSelectedListener, DrawerLayout.DrawerListener {
 
     private ProgressBar progressCircle;
 
@@ -78,7 +78,9 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         displayCount = findViewById(R.id.viewscore);
 
         drawer = findViewById(R.id.drawer_layout);
-        ViewCompat.setElevation(drawer, 1000);
+
+        drawer.addDrawerListener(this);
+        //ViewCompat.setElevation(drawer, 1000);
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -104,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         for(int i = 0; i< userChoices.length; ++i) {
 
             userChoices[i].setClickable(true);
-            userChoices[i].setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
+           // userChoices[i].setBackgroundColor(getThemeColor(this, android.R.attr.colorAccent));
         }
 
         getQRCode = findViewById(R.id.getQRCode);
@@ -117,6 +119,28 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
 
         new MathlyQuerier(this).execute(query);
         progressCircle.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onDrawerSlide(@NonNull View view, float v) {
+        if (v>0.05){ViewCompat.setElevation(drawer, 1000);}
+        else{ ViewCompat.setElevation(drawer, 0);}
+    }
+
+    @Override
+    public void onDrawerOpened(View drawerview){
+        //super.onDrawerOpened(drawerview);
+        ViewCompat.setElevation(drawer, 1000);
+    }
+
+    @Override
+    public void onDrawerClosed(@NonNull View view) {
+        ViewCompat.setElevation(drawer, 0);
+    }
+
+    @Override
+    public void onDrawerStateChanged(int i) {
+
     }
 
     @Override
@@ -170,6 +194,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
         Intent intent;
+        //ViewCompat.setElevation(drawer, 1000);
 
         switch (item.getItemId()) {
 
