@@ -131,7 +131,10 @@ public class catagorychoices extends AppCompatActivity {
         return url;
     }
 
+    public void onBackPressed() {
 
+     startActivity (new Intent(catagorychoices.this, MenuActivity.class));
+    }
     private void sendtomainactivity(){
 
         Intent intent = new Intent(catagorychoices.this, MainActivity.class);
