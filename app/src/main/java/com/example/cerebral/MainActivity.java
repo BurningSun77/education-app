@@ -10,6 +10,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -114,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
             Intent getscore =getIntent();
 
             winCount = getscore.getIntExtra("score",0);
-            displayCount.setText("Win Count: "+Integer.toString(winCount));
+            displayCount.setText("SCORE: "+Integer.toString(winCount));
             jsonInterpreter.setWinCount(winCount);
             for(int i = 0; i< userChoices.length; ++i) {
 
@@ -145,6 +146,11 @@ public class MainActivity extends AppCompatActivity implements WolframAPIFetch, 
         getWAImages();
         progressCircle.setVisibility(View.GONE);
         share.setVisibility(View.VISIBLE);
+    }
+
+    public void menuButtonClick(View v) {
+
+        drawer.openDrawer(Gravity.START);
     }
 
     @Override
