@@ -48,14 +48,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".QRGeneratorActivity"></activity>
-        <activity android:name=".QRScannerActivity" />
-        <activity android:name=".MathlyGenerator">
+        <activity android:name=".QRScannerActivity" >
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
 
                 <data
-                    android:host="open.mathlygenerator"
+                    android:host="open.qrscanner"
                     android:scheme="eduapp" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -63,7 +62,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".DemoActivity" />
     </application>
 
 </manifest>
